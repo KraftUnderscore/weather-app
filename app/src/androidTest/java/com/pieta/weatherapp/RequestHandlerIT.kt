@@ -31,6 +31,7 @@ class RequestHandlerIT {
 
         signal.await()
 
-        assertEquals("com.pieta.weatherapp", output)
+//        assertEquals("{\"lat\":33.4418,\"lon\":-94.0377,\"timezone\":\"America/Chicago\",\"timezone_offset\":", output.subSequence(0, 77))
+        assertEquals("ELO", output)
     }
 }

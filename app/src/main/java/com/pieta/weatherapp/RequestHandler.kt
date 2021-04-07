@@ -14,7 +14,7 @@ class RequestHandler constructor(context: Context)
     var lon:Float = 0.0f
 
     fun run(f: (String) -> Unit) {
-        val url = "https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${"minutely,alerts"}&appid=${"1d67834f6f7c5cdc149e4c38be9c2748"}"
+        val url = "https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${"current,minutely,alerts"}&appid=${"1d67834f6f7c5cdc149e4c38be9c2748"}"
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             Response.Listener<String> { response ->
