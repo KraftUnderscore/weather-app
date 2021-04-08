@@ -20,7 +20,7 @@ class RequestHandler constructor(context: Context)
             Response.Listener<String> { response ->
                 f(response)
             },
-            Response.ErrorListener { f("That didn't work!") })
+            Response.ErrorListener { f("ERROR") })
         queue.add(stringRequest)
     }
 }

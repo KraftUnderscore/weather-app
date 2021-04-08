@@ -9,17 +9,17 @@ class ResponseParserUT {
     private val parser = ResponseParser()
 
     @Test
-    fun parse_hourly_empty() {
+    fun parse_empty() {
         parser.parse("")
-        val hourlyArray = parser.hourly
-        assertNull(hourlyArray)
+        assertNull(parser.hourly)
+        assertNull(parser.daily)
     }
 
     @Test
-    fun parse_hourly_corrupted() {
+    fun parse_corrupted() {
         parser.parse("{\"lat\":33.4418,\"lon\":-94.0377,\"timezone\":\"America/Chicago\",\"timezone_offset\":-18000,\"hourly\":[{\"dt\":16178")
-        val hourlyArray = parser.hourly
-        assertNull(hourlyArray)
+        assertNull(parser.hourly)
+        assertNull(parser.daily)
     }
 
     @Test
@@ -60,5 +60,46 @@ class ResponseParserUT {
         assertEquals("Rain", hourlyArray?.get(last)?.weather?.get(0)?.main)
         assertEquals("light rain", hourlyArray?.get(last)?.weather?.get(0)?.description)
         assertEquals("10d", hourlyArray?.get(last)?.weather?.get(0)?.icon)
+    }
+
+    @Test
+    fun parse_daily_values() {
+        parser.parse(test)
+        val dailyArray = parser.daily
+        val last = if(dailyArray != null) dailyArray.size - 1 else 0
+
+        assertEquals(1617818400, dailyArray?.get(0)?.dt)
+        assertEquals(0.99f, dailyArray?.get(0)?.pop)
+
+        assertEquals(1618423200, dailyArray?.get(last)?.dt)
+        assertEquals(0.42f, dailyArray?.get(last)?.pop)
+    }
+
+    @Test
+    fun parse_daily_temp() {
+        parser.parse(test)
+        val dailyArray = parser.daily
+        val last = if(dailyArray != null) dailyArray.size - 1 else 0
+
+        assertEquals(292.13f, dailyArray?.get(0)?.temp?.day)
+
+        assertEquals(287.77f, dailyArray?.get(last)?.temp?.day)
+    }
+
+    @Test
+    fun parse_daily_weather() {
+        parser.parse(test)
+        val dailyArray = parser.daily
+        val last = if(dailyArray != null) dailyArray.size - 1 else 0
+
+        assertEquals(502, dailyArray?.get(0)?.weather?.get(0)?.id)
+        assertEquals("Rain", dailyArray?.get(0)?.weather?.get(0)?.main)
+        assertEquals("heavy intensity rain", dailyArray?.get(0)?.weather?.get(0)?.description)
+        assertEquals("10d", dailyArray?.get(0)?.weather?.get(0)?.icon)
+
+        assertEquals(500, dailyArray?.get(last)?.weather?.get(0)?.id)
+        assertEquals("Rain", dailyArray?.get(last)?.weather?.get(0)?.main)
+        assertEquals("light rain", dailyArray?.get(last)?.weather?.get(0)?.description)
+        assertEquals("10d", dailyArray?.get(last)?.weather?.get(0)?.icon)
     }
 }
