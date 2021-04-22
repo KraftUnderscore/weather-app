@@ -1,4 +1,4 @@
-package com.pieta.weatherapp
+package com.pieta.weatherapp.data
 
 import android.content.Context
 import com.android.volley.Request

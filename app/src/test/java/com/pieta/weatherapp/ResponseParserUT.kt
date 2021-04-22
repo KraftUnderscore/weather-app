@@ -1,5 +1,6 @@
 package com.pieta.weatherapp
 
+import com.pieta.weatherapp.data.ResponseParser
 import org.junit.Test
 
 import org.junit.Assert.*

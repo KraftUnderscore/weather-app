@@ -1,5 +1,6 @@
 package com.pieta.weatherapp
 
+import com.pieta.weatherapp.data.*
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -15,13 +16,19 @@ class SerializerUT {
 
     @Test
     fun serialize_data() {
-        val result = serializer.serialize(listOf(daily), listOf(hourly))
+        val result = serializer.serializeWeather(listOf(daily), listOf(hourly))
         assertEquals(serializedString, result)
     }
 
     @Test
+    fun serialize_null() {
+        val result = serializer.serializeWeather(null, null)
+        assertEquals("", result)
+    }
+
+    @Test
     fun deserialize_data() {
-        val (d, h) = serializer.deserialize(serializedString)
+        val (d, h) = serializer.deserializeWeather(serializedString)
         assertEquals(daily.dt, d?.get(0)?.dt)
         assertEquals(daily.weather[0].description, d?.get(0)?.weather?.get(0)?.description)
         assertEquals(daily.pop, d?.get(0)?.pop)
@@ -34,7 +41,7 @@ class SerializerUT {
     @Test
     fun deserialize_data_corrupted() {
         val corrupted = "[{\"dt\" : 10 : 15.3}, \"weather\" : [{\"descript : \"abc\", \"id\" : 20, \"main\" : \"test\"}]}];-;[{\"dt\" : 30, \" : 45, \"pop\" : 0.05, \"temp\" : -12.34,description\" : \"desc2\", \"icon\" : \"abc2\", \"id\" : 40, \"main\" : \"test2\"}], \"wind_deg\" : 285, \"wind_speed\" : 26.1}]"
-        val (d, h) = serializer.deserialize(corrupted)
+        val (d, h) = serializer.deserializeWeather(corrupted)
         assertNull(d)
         assertNull(h)
     }
@@ -42,7 +49,7 @@ class SerializerUT {
     @Test
     fun deserialize_data_single_string() {
         val single_string = "[{\"dt\" : 10, \"pop\" : 0.5, \"temp\" : {\"day\" : 15.3}, \"weather\" : [{\"description\" : \"desc\", \"icon\" : \"abc\", \"id\" : 20, \"main\" : \"test\"}]}]"
-        val (d, h) = serializer.deserialize(single_string)
+        val (d, h) = serializer.deserializeWeather(single_string)
         assertNull(d)
         assertNull(h)
     }
