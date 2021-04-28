@@ -7,6 +7,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
+import androidx.viewpager2.widget.ViewPager2
+import com.pieta.weatherapp.adapters.ViewPagerAdapter
 import com.pieta.weatherapp.alarms.AlarmReceiver
 import com.pieta.weatherapp.alarms.NotificationsManager
 
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity() {
                     pendingIntent
             )
 
-
         }
 
         NotificationsManager.createNotificationChannel(this)
@@ -42,5 +43,9 @@ class MainActivity : AppCompatActivity() {
 
         //val textView = findViewById<TextView>(R.id.tmpTxt)
         //textView.text = value.toString()
+
+        val adapter = ViewPagerAdapter()
+        val viewPager = findViewById<ViewPager2>(R.id.view_pager) as ViewPager2
+        viewPager.adapter = adapter
     }
 }
