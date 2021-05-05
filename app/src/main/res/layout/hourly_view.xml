@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/hourly_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/rectangle"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/hourly_detail_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <TextView
+            android:id="@+id/hourlyGreetingsText"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:text="HelloText"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="128sp"
+            app:autoSizeMinTextSize="32sp"
+            app:autoSizeTextType="uniform" />
+
+        <TextView
+            android:id="@+id/hourlyMessageText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="MessageText" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hourly_detail_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/rectangle"
+        app:layout_constraintBottom_toTopOf="@+id/hourly_hours_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hourly_message_layout">
+
+        <LinearLayout
+            android:id="@+id/hourly_feelslike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hourlyActualTempText">
+
+            <TextView
+                android:id="@+id/hourFeelsLikeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Odczuwalna:"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/hourlyFeelsLikeText"
+                android:layout_width="34dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="3°"
+                android:textColor="@color/white"
+                app:autoSizeMaxTextSize="64sp"
+                app:autoSizeMinTextSize="16sp"
+                app:autoSizeTextType="uniform" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/hourlyCityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="City"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/hourlyActualTempText"
+            android:layout_width="130dp"
+            android:layout_height="111dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="26°"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="128sp"
+            app:autoSizeMinTextSize="64sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hourlyCityText" />
+
+        <LinearLayout
+            android:id="@+id/hourly_rain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/hourly_wind"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/hourlyActualTempText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <TextView
+                android:id="@+id/hourlyRainLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Opady: "
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/hourlyRainText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40%"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hourly_wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/hourly_humidity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/hourlyActualTempText"
+            app:layout_constraintTop_toBottomOf="@+id/hourly_rain">
+
+            <TextView
+                android:id="@+id/hourlyWindText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Wiatr: " />
+
+            <TextView
+                android:id="@+id/hourlyWindSpeedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12.4"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/hourlyWindDegreeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123"
+                android:textColor="@color/purple_200" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hourly_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/hourlyActualTempText"
+            app:layout_constraintTop_toBottomOf="@+id/hourly_wind">
+
+            <TextView
+                android:id="@+id/hourlyHumidityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Wilgotność: " />
+
+            <TextView
+                android:id="@+id/hourlyHumidityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50%"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/hourly_hours_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/rectangle"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hourly_detail_layout">
+
+        <TextView
+            android:id="@+id/hourlyScrollViewLabel"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginBottom="8sp"
+            android:gravity="center"
+            android:text="Najbliższa prognoza"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="64sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeTextType="uniform" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/hourlyWeatherLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
