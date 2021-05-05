@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ImageView
+        android:id="@+id/menu_options_button"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
         android:clickable="true"
         android:focusable="true"
-        android:id="@+id/menu_options_button"
-        android:layout_width="wrap_content"
+        android:src="@drawable/ic_menu"
         android:textColor="@color/white"
-        android:layout_height="wrap_content"
-        android:text="Menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/menu_hourly_button"
         app:layout_constraintHorizontal_bias="0.5"
@@ -20,27 +20,29 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:clickable="true"
-        android:textColor="@color/white"
-        android:focusable="true"
         android:id="@+id/menu_hourly_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:text="Dzisiaj"
+        android:textColor="@color/white"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/menu_daily_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/menu_options_button"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:clickable="true"
-        android:textColor="@color/white"
-        android:focusable="true"
         android:id="@+id/menu_daily_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:text="Tydzień"
+        android:textColor="@color/white"
+        android:textSize="32sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

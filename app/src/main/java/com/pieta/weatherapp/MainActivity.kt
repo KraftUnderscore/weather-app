@@ -1,26 +1,16 @@
 package com.pieta.weatherapp
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Criteria
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.View
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.gms.location.LocationServices
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.pieta.weatherapp.adapters.ViewPagerAdapter
 import com.pieta.weatherapp.alarms.AlarmReceiver
 import com.pieta.weatherapp.alarms.NotificationsManager
@@ -90,22 +80,51 @@ class MainActivity : AppCompatActivity() {
         //val loaded = serializer.loadWeather(this)
         val viewPager = findViewById<ViewPager2>(R.id.view_pager)
 
-        val menuOptionsButton = findViewById<TextView>(R.id.menu_options_button)
+        val menuOptionsButton = findViewById<ImageView>(R.id.menu_options_button)
         val menuHourlyButton = findViewById<TextView>(R.id.menu_hourly_button)
         val menuDailyButton = findViewById<TextView>(R.id.menu_daily_button)
 
+        menuHourlyButton.textSize = 40f
+        menuDailyButton.textSize = 32f
+
         menuDailyButton.setOnClickListener {
+
             viewPager.beginFakeDrag()
             viewPager.fakeDragBy(-750f)
             viewPager.endFakeDrag()
         }
 
         menuHourlyButton.setOnClickListener {
+
             viewPager.beginFakeDrag()
             viewPager.fakeDragBy(750f)
             viewPager.endFakeDrag()
         }
 
+        viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+            }
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when(position)
+                {
+                    0 -> {
+                        menuHourlyButton.textSize = 40f
+                        menuDailyButton.textSize = 32f
+                    }
+                    1 -> {
+                        menuHourlyButton.textSize = 32f
+                        menuDailyButton.textSize = 40f
+                    }
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+            }
+        })
         val loaded : String? = null
         if(loaded == null)
         {
@@ -121,6 +140,7 @@ class MainActivity : AppCompatActivity() {
                     responseParser.parse(s)
                     runOnUiThread {
                         adapter.notifyItemChanged(0, responseParser.hourly)
+                        adapter.notifyItemChanged(1, responseParser.daily)
                     }
                 }
             }

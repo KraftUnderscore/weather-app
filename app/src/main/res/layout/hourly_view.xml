@@ -30,11 +30,12 @@
             android:layout_height="46dp"
             android:layout_marginTop="0dp"
             android:gravity="center"
-            android:text="HelloText"
+            android:text="Dzień dobry!"
             android:textColor="@color/white"
             app:autoSizeMaxTextSize="128sp"
             app:autoSizeMinTextSize="32sp"
-            app:autoSizeTextType="uniform" />
+            app:autoSizeTextType="uniform"
+            />
 
         <TextView
             android:id="@+id/hourlyMessageText"

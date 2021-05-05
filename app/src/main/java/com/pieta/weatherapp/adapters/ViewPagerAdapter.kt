@@ -51,7 +51,7 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                 hourlyHumidityText.text = (now.humidity.toString() + "%")
                 hourlyWindSpeedText.text = (now.wind_speed.toString() + "km/h")
                 hourlyWindDegreeText.text = now.wind_deg.toString()
-                var increase = 1
+
                 for (hour in hourly)
                 {
                     val view = LayoutInflater.from(itemView.context).inflate(R.layout.hourly_scroll_item, hourlyWeatherLayout, true)
@@ -59,13 +59,12 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                     val dateString = format.format(Date(hour.dt.toLong()))
                     val hourText =  view.findViewById<TextView>(R.id.hourlyScrollItemHourText)
                     hourText.text = dateString
-                    hourText.id += increase
+                    hourText.id++
                     val tempText = view.findViewById<TextView>(R.id.hourlyScrollItemTempText)
                     val formattedTemp = ("%.0f".format(hour.temp - 273.15) + "°")
                     tempText.text = formattedTemp
                     Log.i("ViewPageAdapter", "${hour.dt} parsed: $dateString temp: $formattedTemp")
-                    tempText.id += increase
-                    increase += 1
+                    tempText.id++
                 }
             }
         }
@@ -100,7 +99,6 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
             0 -> {
                 val viewHolder =  holder as HourlyViewHolder
                 viewHolder.initialize(hourly)
-                //TODO: set daily values here
             }
             1 -> {
                 val viewHolder =  holder as DailyViewHolder
@@ -116,7 +114,6 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                 val viewHolder =  holder as HourlyViewHolder
                 if(payloads.size > 0) viewHolder.initialize(payloads[0] as List<Hourly>)
                 else viewHolder.initialize(null)
-                //TODO: set daily values here
             }
             1 -> {
                 val viewHolder =  holder as DailyViewHolder
