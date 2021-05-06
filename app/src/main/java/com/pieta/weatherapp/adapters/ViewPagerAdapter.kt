@@ -64,12 +64,12 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                     val dateString = format.format(Date(hour.dt.toLong()))
                     val hourText =  view.findViewById<TextView>(R.id.hourlyScrollItemHourText)
                     hourText.text = dateString
-                    hourText.id++
+                    hourText.id = View.generateViewId()
                     val tempText = view.findViewById<TextView>(R.id.hourlyScrollItemTempText)
                     val formattedTemp = ("%.0f".format(hour.temp - 273.15) + "°")
                     tempText.text = formattedTemp
                     Log.i("WeatherApp", "${hour.dt} parsed: $dateString temp: $formattedTemp")
-                    tempText.id++
+                    tempText.id = View.generateViewId()
                 }
             }
         }
@@ -104,15 +104,15 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                     val formattedPop = ("%.0f".format(100f * day.pop) + "%")
                     val dayText = view.findViewById<TextView>(R.id.dailyScrollDayText)
                     dayText.text = date.toString()
-                    dayText.id++
+                    dayText.id = View.generateViewId()
 
                     val tempText = view.findViewById<TextView>(R.id.dailyScrollTempText)
                     tempText.text = formattedTemp
-                    tempText.id++
+                    tempText.id = View.generateViewId()
 
                     val popText = view.findViewById<TextView>(R.id.dailyScrollRainText)
                     popText.text = formattedPop
-                    popText.id++
+                    popText.id = View.generateViewId()
                 }
             }
         }
