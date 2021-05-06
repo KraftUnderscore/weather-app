@@ -8,6 +8,7 @@ import java.lang.IllegalStateException
 class ResponseParser {
     var hourly: List<Hourly>? = null
     var daily: List<Daily>? = null
+
     private val klaxon = Klaxon()
 
     fun parse(json: String) {

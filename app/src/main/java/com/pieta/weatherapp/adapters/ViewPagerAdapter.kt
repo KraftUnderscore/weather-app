@@ -14,7 +14,7 @@ import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?, private val hourly: List<Hourly>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     inner class HourlyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
@@ -36,7 +36,7 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
             {
                 Log.i("WeatherApp", "HourlyViewHolder init null")
                 hourlyMessageText.text = "-"
-                hourlyCityText.text = "Your city"
+                hourlyCityText.text = city
                 hourlyActualTempText.text = "-"
                 hourlyFeelsLikeText.text = "-"
                 hourlyRainText.text = "-"
@@ -49,7 +49,7 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                 Log.i("WeatherApp", "HourlyViewHolder init not null")
                 val now = hourly[0]
                 hourlyMessageText.text = now.weather[0].description
-                hourlyCityText.text = "Your city"
+                hourlyCityText.text = city
                 hourlyActualTempText.text = ("%.0f".format(now.temp - 273.15) + "°")
                 hourlyFeelsLikeText.text = ("%.0f".format(now.feels_like - 273.15)+ "°")
                 hourlyRainText.text = ("%.0f".format(100f * now.pop) + "%")
@@ -89,12 +89,12 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                 Log.i("WeatherApp", " init null")
 
                 dailyMessageText.text = "-"
-                dailyCityText.text = "-"
+                dailyCityText.text = city
             } else {
                 Log.i("WeatherApp", "DailyViewHolder init not null")
 
                 dailyMessageText.text = "Nice weather!"
-                dailyCityText.text = "Your city"
+                dailyCityText.text = city
                 for (day in daily) {
                     val view = LayoutInflater.from(itemView.context).inflate(R.layout.daily_scroll_item, dailyScrollLayout, true)
                     val calendar = Calendar.getInstance()

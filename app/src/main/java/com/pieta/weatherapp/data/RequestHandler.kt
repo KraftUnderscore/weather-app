@@ -1,14 +1,18 @@
 package com.pieta.weatherapp.data
 
 import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import kotlin.concurrent.thread
+import java.io.IOException
+import java.util.*
 
-class RequestHandler constructor(context: Context)
+
+class RequestHandler constructor(val context: Context)
 {
     private val queue = Volley.newRequestQueue(context)
 
@@ -26,5 +30,17 @@ class RequestHandler constructor(context: Context)
             Response.ErrorListener { f("ERROR") })
         Log.i("WeatherApp", "Start request")
         queue.add(stringRequest)
+    }
+
+    fun getCity(): String {
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        try {
+            val address: List<Address> = geoCoder.getFromLocation(lat.toDouble(), lon.toDouble(), 1)
+            Log.i("WeatherApp", "found adresses: ${address.get(0).locality}")
+            return address[0].locality
+        } catch (e: IOException) {
+        } catch (e: NullPointerException) {
+        }
+        return "-"
     }
 }

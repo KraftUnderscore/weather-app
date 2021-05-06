@@ -18,7 +18,6 @@ import com.pieta.weatherapp.alarms.NotificationsManager
 import com.pieta.weatherapp.data.RequestHandler
 import com.pieta.weatherapp.data.ResponseParser
 import com.pieta.weatherapp.data.Serializer
-import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 
@@ -123,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         if(loaded == null)
         {
 
-            val adapter = ViewPagerAdapter(null, null)
+            val adapter = ViewPagerAdapter("-",null, null)
             viewPager.adapter = adapter
             val requestHandler = RequestHandler(this)
             requestHandler.lon = 17.03f
@@ -132,14 +131,15 @@ class MainActivity : AppCompatActivity() {
             requestHandler.run { s: String ->
                 val responseParser = ResponseParser()
                 thread {
+                    val city = requestHandler.getCity()
                     Log.i("WeatherApp", "Start parsing")
                     responseParser.parse(s)
                     Log.i("WeatherApp", "End parsing")
 
-                    val adapter = ViewPagerAdapter(responseParser.daily, responseParser.hourly)
+                    val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, responseParser.hourly)
                     runOnUiThread {
                         //TODO: Try to make it using notifyItemChanged
-                        viewPager.adapter = adapter
+                        viewPager.adapter = loadedAdapter
 //                        Log.i("WeatherApp", "Updating UI hourly ${responseParser.hourly?.size}")
 //                        adapter.notifyItemChanged(0, responseParser.hourly)
 //                        Log.i("WeatherApp", "Updating UI daily ${responseParser.daily?.size}")
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         else
         {
             val (d, h) = serializer.deserializeWeather(loaded)
-            val adapter = ViewPagerAdapter(d, h)
+            val adapter = ViewPagerAdapter("-", d, h)
             viewPager.adapter = adapter
         }
     }
