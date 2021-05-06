@@ -1,6 +1,7 @@
 package com.pieta.weatherapp.data
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -19,9 +20,11 @@ class RequestHandler constructor(context: Context)
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             Response.Listener<String> { response ->
+                Log.i("WeatherApp", "Got request response")
                 f(response)
             },
             Response.ErrorListener { f("ERROR") })
+        Log.i("WeatherApp", "Start request")
         queue.add(stringRequest)
     }
 }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center">
 
     <ImageView
         android:id="@+id/dailyScrollItemIcon"
@@ -11,12 +12,7 @@
         android:layout_height="32dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dailyScrollTempText"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dailyScrollDayText"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/ic_launcher_foreground" />
 
     <TextView
         android:id="@+id/dailyScrollDayText"
@@ -24,13 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dailyScrollItemIcon"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="TextView" />
 
     <TextView
         android:id="@+id/dailyScrollTempText"
@@ -38,33 +28,18 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dailyScrollRainLabel"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dailyScrollItemIcon"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="TextView" />
 
     <TextView
         android:id="@+id/dailyScrollRainLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Opady: "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dailyScrollRainText"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dailyScrollTempText"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Opady: " />
 
     <TextView
         android:id="@+id/dailyScrollRainText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/dailyScrollRainLabel"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="TextView" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

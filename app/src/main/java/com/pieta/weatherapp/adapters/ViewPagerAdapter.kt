@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pieta.weatherapp.R
 import com.pieta.weatherapp.data.Daily
 import com.pieta.weatherapp.data.Hourly
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,8 +30,11 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
 
         fun initialize(hourly: List<Hourly>?)
         {
+            Log.i("WeatherApp", "HourlyViewHolder init")
+
             if(hourly == null || hourly.isEmpty())
             {
+                Log.i("WeatherApp", "HourlyViewHolder init null")
                 hourlyMessageText.text = "-"
                 hourlyCityText.text = "Your city"
                 hourlyActualTempText.text = "-"
@@ -42,6 +46,7 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
             }
             else
             {
+                Log.i("WeatherApp", "HourlyViewHolder init not null")
                 val now = hourly[0]
                 hourlyMessageText.text = now.weather[0].description
                 hourlyCityText.text = "Your city"
@@ -63,7 +68,7 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
                     val tempText = view.findViewById<TextView>(R.id.hourlyScrollItemTempText)
                     val formattedTemp = ("%.0f".format(hour.temp - 273.15) + "°")
                     tempText.text = formattedTemp
-                    Log.i("ViewPageAdapter", "${hour.dt} parsed: $dateString temp: $formattedTemp")
+                    Log.i("WeatherApp", "${hour.dt} parsed: $dateString temp: $formattedTemp")
                     tempText.id++
                 }
             }
@@ -72,7 +77,45 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
 
     inner class DailyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
-        val d = daily
+        private val dailyMessageText = itemView.findViewById<TextView>(R.id.dailyMessageText)
+        private val dailyCityText = itemView.findViewById<TextView>(R.id.dailyCityText)
+        private val dailyScrollLayout = itemView.findViewById<LinearLayout>(R.id.dailyScrollLayout)
+
+        fun initialize(daily: List<Daily>?)
+        {
+            Log.i("WeatherApp", "DailyViewHolder init")
+
+            if(daily == null) {
+                Log.i("WeatherApp", " init null")
+
+                dailyMessageText.text = "-"
+                dailyCityText.text = "-"
+            } else {
+                Log.i("WeatherApp", "DailyViewHolder init not null")
+
+                dailyMessageText.text = "Nice weather!"
+                dailyCityText.text = "Your city"
+                for (day in daily) {
+                    val view = LayoutInflater.from(itemView.context).inflate(R.layout.daily_scroll_item, dailyScrollLayout, true)
+                    val calendar = Calendar.getInstance()
+                    calendar.time = Date(day.dt.toLong())
+                    val date = calendar.get(Calendar.DAY_OF_WEEK)
+                    val formattedTemp = ("%.0f".format(day.temp.day - 273.15) + "°")
+                    val formattedPop = ("%.0f".format(100f * day.pop) + "%")
+                    val dayText = view.findViewById<TextView>(R.id.dailyScrollDayText)
+                    dayText.text = date.toString()
+                    dayText.id++
+
+                    val tempText = view.findViewById<TextView>(R.id.dailyScrollTempText)
+                    tempText.text = formattedTemp
+                    tempText.id++
+
+                    val popText = view.findViewById<TextView>(R.id.dailyScrollRainText)
+                    popText.text = formattedPop
+                    popText.id++
+                }
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -94,30 +137,41 @@ class ViewPagerAdapter(val daily: List<Daily>?, private val hourly: List<Hourly>
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Log.i("WeatherApp", "onBindViewHolder no payload")
+
         when(holder.itemViewType)
         {
             0 -> {
+                Log.i("WeatherApp", "HourlyViewHolder")
                 val viewHolder =  holder as HourlyViewHolder
                 viewHolder.initialize(hourly)
             }
             1 -> {
+                Log.i("WeatherApp", "DailyViewHolder")
                 val viewHolder =  holder as DailyViewHolder
-                //TODO: set weekly values here
+                viewHolder.initialize(daily)
             }
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
-        when(position)
-        {
-            0 -> {
-                val viewHolder =  holder as HourlyViewHolder
-                if(payloads.size > 0) viewHolder.initialize(payloads[0] as List<Hourly>)
-                else viewHolder.initialize(null)
-            }
-            1 -> {
-                val viewHolder =  holder as DailyViewHolder
-                //TODO: set weekly values here
-            }
-        }    }
+//    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+//        Log.i("WeatherApp", "onBindViewHolder payload")
+//
+//        when(position)
+//        {
+//            0 -> {
+//                Log.i("WeatherApp", "HourlyViewHolder payload size: ${payloads.size}")
+//                val viewHolder =  holder as HourlyViewHolder
+//                if(payloads.size > 0) viewHolder.initialize(payloads[0] as List<Hourly>)
+//                else viewHolder.initialize(null)
+//            }
+//            1 -> {
+//                Log.i("WeatherApp", "DailyViewHolder payload size: ${payloads.size}")
+//                val viewHolder =  holder as DailyViewHolder
+//                if(payloads.size > 0) viewHolder.initialize(payloads[0] as List<Daily>)
+//                else viewHolder.initialize(null)
+//            }
+//        }
+//    }
+
 }

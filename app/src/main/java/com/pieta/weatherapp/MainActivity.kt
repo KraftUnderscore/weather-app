@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ import com.pieta.weatherapp.alarms.NotificationsManager
 import com.pieta.weatherapp.data.RequestHandler
 import com.pieta.weatherapp.data.ResponseParser
 import com.pieta.weatherapp.data.Serializer
+import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 
@@ -102,10 +104,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-            }
-
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 when(position)
@@ -120,14 +118,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                super.onPageScrollStateChanged(state)
-            }
         })
         val loaded : String? = null
         if(loaded == null)
         {
+
             val adapter = ViewPagerAdapter(null, null)
             viewPager.adapter = adapter
             val requestHandler = RequestHandler(this)
@@ -137,10 +132,18 @@ class MainActivity : AppCompatActivity() {
             requestHandler.run { s: String ->
                 val responseParser = ResponseParser()
                 thread {
+                    Log.i("WeatherApp", "Start parsing")
                     responseParser.parse(s)
+                    Log.i("WeatherApp", "End parsing")
+
+                    val adapter = ViewPagerAdapter(responseParser.daily, responseParser.hourly)
                     runOnUiThread {
-                        adapter.notifyItemChanged(0, responseParser.hourly)
-                        adapter.notifyItemChanged(1, responseParser.daily)
+                        //TODO: Try to make it using notifyItemChanged
+                        viewPager.adapter = adapter
+//                        Log.i("WeatherApp", "Updating UI hourly ${responseParser.hourly?.size}")
+//                        adapter.notifyItemChanged(0, responseParser.hourly)
+//                        Log.i("WeatherApp", "Updating UI daily ${responseParser.daily?.size}")
+//                        adapter.notifyItemChanged(1, responseParser.daily)
                     }
                 }
             }
