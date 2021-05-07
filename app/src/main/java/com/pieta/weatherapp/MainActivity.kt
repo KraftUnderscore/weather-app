@@ -1,18 +1,27 @@
 package com.pieta.weatherapp
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
+import android.view.Gravity
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.google.android.gms.location.LocationServices
 import com.pieta.weatherapp.adapters.ViewPagerAdapter
+import com.pieta.weatherapp.alarms.AlarmCreator
 import com.pieta.weatherapp.alarms.AlarmReceiver
 import com.pieta.weatherapp.alarms.NotificationsManager
 import com.pieta.weatherapp.data.RequestHandler
@@ -26,62 +35,79 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //TODO: Refactor creating Alarm to a separate class
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = Intent(this, AlarmReceiver::class.java)
+        AlarmCreator.createAlarm(this)
 
-        val existingIntent = PendingIntent.getService(this, 0,
-                                                      alarmIntent, PendingIntent.FLAG_NO_CREATE)
-        if(existingIntent != null)
-        {
-            val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0)
-
-            alarmManager.setInexactRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 10000,
-                    10000,
-                    pendingIntent
-            )
-
-        }
-        //TODO: Figure out location and permissions
-//        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//        {
-//            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION))
-//            {
-//                //call function again
-//            }
-//            fusedLocationClient.lastLocation
-//        }
-//        when {
-//            ContextCompat.checkSelfPermission(
-//                    this,
-//                    Manifest.permission.ACCESS_FINE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED -> {
-//                // You can use the API that requires the permission.
-//            }
-//            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) -> {
-//                Toast.makeText(this, "We need permission to update the weather conditions.", Toast.LENGTH_LONG).show()
-//            }
-//            else -> {
-//                // You can directly ask for the permission.
-//                // The registered ActivityResultCallback gets the result of this request.
-//                requestPermissionLauncher.launch(
-//                        Manifest.permission.REQUESTED_PERMISSION)
-//            }
-//        }
-
-
-        //TODO: Refactor initialization to separate class
         NotificationsManager.createNotificationChannel(this)
         NotificationsManager.sendNotification(this)
 
-        val serializer = Serializer()
-        //val loaded = serializer.loadWeather(this)
+        val (lat: Float, lon: Float) = getLocation()
         val viewPager = findViewById<ViewPager2>(R.id.view_pager)
 
-        val menuOptionsButton = findViewById<ImageView>(R.id.menu_options_button)
+        initializeButtons(viewPager)
+        initializeNavMenu()
+        initializeAdapter(viewPager, lon, lat)
+    }
+
+    private fun initializeAdapter(viewPager: ViewPager2, lon: Float, lat: Float) {
+        val serializer = Serializer()
+        //val loaded = serializer.loadWeather(this)
+        val loaded: String? = null
+        if (loaded == null) {
+            val adapter = ViewPagerAdapter("-", null, null)
+            viewPager.adapter = adapter
+            val requestHandler = RequestHandler(this)
+            requestHandler.lon = lon
+            requestHandler.lat = lat
+
+            requestHandler.run { s: String ->
+                val responseParser = ResponseParser()
+                thread {
+                    val city = requestHandler.getCity()
+                    responseParser.parse(s)
+
+                    val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, responseParser.hourly)
+                    runOnUiThread {
+                        viewPager.adapter = loadedAdapter
+                    }
+                }
+            }
+        } else {
+            val (d, h) = serializer.deserializeWeather(loaded)
+            val adapter = ViewPagerAdapter("-", d, h)
+            viewPager.adapter = adapter
+        }
+    }
+
+    private fun getLocation(): Pair<Float, Float> {
+        //TODO: Figure out location and permissions
+        val hasFineLocationPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarseLocationPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+        Log.i("WeatherApp", "Got Location: coarse $hasCoarseLocationPermission fine $hasFineLocationPermission")
+        if (!hasCoarseLocationPermission || !hasFineLocationPermission) {
+            val permissionsToRequest = mutableListOf<String>()
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+            ActivityCompat.requestPermissions(this, permissionsToRequest.toTypedArray(), 0)
+        }
+
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        var lat: Float = 0f
+        var lon: Float = 0f
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                Log.i("WeatherApp", "Not empty!")
+                lat = location.latitude.toFloat()
+                lon = location.longitude.toFloat()
+            }
+        }
+        Log.i("WeatherApp", "Got Location: latitude $lat longitude $lon")
+        //return Pair(lat, lon)
+        return Pair(51.1102f, 17.0345f)
+    }
+
+    private fun initializeButtons(viewPager: ViewPager2) {
         val menuHourlyButton = findViewById<TextView>(R.id.menu_hourly_button)
         val menuDailyButton = findViewById<TextView>(R.id.menu_daily_button)
 
@@ -105,8 +131,7 @@ class MainActivity : AppCompatActivity() {
         viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                when(position)
-                {
+                when (position) {
                     0 -> {
                         menuHourlyButton.textSize = 40f
                         menuDailyButton.textSize = 32f
@@ -118,41 +143,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        val loaded : String? = null
-        if(loaded == null)
-        {
+    }
 
-            val adapter = ViewPagerAdapter("-",null, null)
-            viewPager.adapter = adapter
-            val requestHandler = RequestHandler(this)
-            requestHandler.lon = 17.03f
-            requestHandler.lat = 51.1f
-
-            requestHandler.run { s: String ->
-                val responseParser = ResponseParser()
-                thread {
-                    val city = requestHandler.getCity()
-                    Log.i("WeatherApp", "Start parsing")
-                    responseParser.parse(s)
-                    Log.i("WeatherApp", "End parsing")
-
-                    val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, responseParser.hourly)
-                    runOnUiThread {
-                        //TODO: Try to make it using notifyItemChanged
-                        viewPager.adapter = loadedAdapter
-//                        Log.i("WeatherApp", "Updating UI hourly ${responseParser.hourly?.size}")
-//                        adapter.notifyItemChanged(0, responseParser.hourly)
-//                        Log.i("WeatherApp", "Updating UI daily ${responseParser.daily?.size}")
-//                        adapter.notifyItemChanged(1, responseParser.daily)
-                    }
-                }
+    private fun initializeNavMenu() {
+        val menuOptionsButton = findViewById<ImageView>(R.id.menu_options_button)
+        val navigationDrawer = findViewById<DrawerLayout>(R.id.mainDrawerLayout)
+        menuOptionsButton.setOnClickListener {
+            if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+                navigationDrawer.closeDrawer(GravityCompat.START)
+            } else {
+                navigationDrawer.openDrawer(GravityCompat.START)
             }
-        }
-        else
-        {
-            val (d, h) = serializer.deserializeWeather(loaded)
-            val adapter = ViewPagerAdapter("-", d, h)
-            viewPager.adapter = adapter
         }
     }
 }

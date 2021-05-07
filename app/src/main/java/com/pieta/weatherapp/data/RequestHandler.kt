@@ -24,11 +24,9 @@ class RequestHandler constructor(val context: Context)
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             Response.Listener<String> { response ->
-                Log.i("WeatherApp", "Got request response")
                 f(response)
             },
             Response.ErrorListener { f("ERROR") })
-        Log.i("WeatherApp", "Start request")
         queue.add(stringRequest)
     }
 
@@ -36,8 +34,12 @@ class RequestHandler constructor(val context: Context)
         val geoCoder = Geocoder(context, Locale.getDefault())
         try {
             val address: List<Address> = geoCoder.getFromLocation(lat.toDouble(), lon.toDouble(), 1)
-            Log.i("WeatherApp", "found adresses: ${address.get(0).locality}")
-            return address[0].locality
+            if(address.isNotEmpty())
+            {
+                if(address[0].locality != null) return address[0].locality
+            }
+            else
+                return "Your location"
         } catch (e: IOException) {
         } catch (e: NullPointerException) {
         }
