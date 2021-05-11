@@ -1,12 +1,17 @@
 package com.pieta.weatherapp.adapters
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.pieta.weatherapp.R
+import com.pieta.weatherapp.data.ContentManager
 import com.pieta.weatherapp.data.Daily
 import com.pieta.weatherapp.data.Hourly
 import java.text.SimpleDateFormat
@@ -57,6 +62,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                     val view = LayoutInflater.from(itemView.context).inflate(R.layout.hourly_scroll_item, hourlyWeatherLayout, true)
                     val hourText =  view.findViewById<TextView>(R.id.hourlyScrollItemHourText)
                     val tempText = view.findViewById<TextView>(R.id.hourlyScrollItemTempText)
+                    val imageView = view.findViewById<ImageView>(R.id.hourlyScrollItemIcon)
 
                     val format = SimpleDateFormat("HH':00'", Locale.getDefault())
                     val dateString = format.format(Date(hour.dt.toLong() * 1000))
@@ -64,8 +70,11 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
 
                     hourText.text = dateString
                     tempText.text = formattedTemp
+                    imageView.setImageDrawable(ContentManager.getImage(itemView.context, hour.weather[0].icon))
+
                     hourText.id = View.generateViewId()
                     tempText.id = View.generateViewId()
+                    imageView.id = View.generateViewId()
                 }
             }
         }
@@ -90,6 +99,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                     val dayText = view.findViewById<TextView>(R.id.dailyScrollDayText)
                     val tempText = view.findViewById<TextView>(R.id.dailyScrollTempText)
                     val popText = view.findViewById<TextView>(R.id.dailyScrollRainText)
+                    val imageView = view.findViewById<ImageView>(R.id.dailyScrollItemIcon)
 
                     val format = SimpleDateFormat("EEE", Locale.getDefault())
                     val dateString = format.format(Date(day.dt.toLong() * 1000))
@@ -99,9 +109,12 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                     dayText.text = dateString
                     tempText.text = formattedTemp
                     popText.text = formattedPop
+                    imageView.setImageDrawable(ContentManager.getImage(itemView.context, day.weather[0].icon))
+
                     dayText.id = View.generateViewId()
                     tempText.id = View.generateViewId()
                     popText.id = View.generateViewId()
+                    imageView.id = View.generateViewId()
                 }
             }
         }
