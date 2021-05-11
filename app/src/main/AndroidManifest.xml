@@ -3,7 +3,7 @@
     package="com.pieta.weatherapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApp">
+        <activity android:name=".NotificationsActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,18 +25,20 @@
             </intent-filter>
         </activity>
 
-        <receiver android:process=":remote" android:name="com.pieta.weatherapp.alarms.AlarmReceiver">
+        <receiver
+            android:name=".alarms.AlarmReceiver"
+            android:process=":remote">
             <intent-filter>
-                <action android:name="com.pieta.weatherapp.update"/>
+                <action android:name="com.pieta.weatherapp.update" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.pieta.weatherapp.alarms.RebootReceiver" android:enabled="true">
+        <receiver
+            android:name=".alarms.RebootReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

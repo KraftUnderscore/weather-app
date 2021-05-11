@@ -20,7 +20,7 @@ class SerializerIT {
     private val hourly = Hourly(30, -12.34f, -12.05f, 45, 26.1f,
             285, listOf(Weather(40, "test2", "desc2", "abc2")), 0.05f)
 
-    private val notifications = NotificationSettings(true, 0.12f, 34.56f, 78)
+    private val notifications = NotificationSettings(true, true, 0.12f, true, 34.56f, true, 78)
 
     @Test
     fun save_load_weather_data() {
@@ -60,7 +60,9 @@ class SerializerIT {
             assertEquals(notifications.pop, n?.pop)
             assertEquals(notifications.wind_speed, n?.wind_speed)
             assertEquals(notifications.humidity, n?.humidity)
-
+            assertTrue(notifications.popActive)
+            assertTrue(notifications.humidityActive)
+            assertTrue(notifications.windActive)
         }
     }
 

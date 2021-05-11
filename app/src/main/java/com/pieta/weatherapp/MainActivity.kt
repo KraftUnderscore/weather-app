@@ -1,16 +1,12 @@
 package com.pieta.weatherapp
 
 import android.Manifest
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
-import android.view.Gravity
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,9 +16,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.internal.NavigationMenuItemView
+import com.google.android.material.navigation.NavigationView
 import com.pieta.weatherapp.adapters.ViewPagerAdapter
 import com.pieta.weatherapp.alarms.AlarmCreator
-import com.pieta.weatherapp.alarms.AlarmReceiver
 import com.pieta.weatherapp.alarms.NotificationsManager
 import com.pieta.weatherapp.data.RequestHandler
 import com.pieta.weatherapp.data.ResponseParser
@@ -155,5 +152,17 @@ class MainActivity : AppCompatActivity() {
                 navigationDrawer.openDrawer(GravityCompat.START)
             }
         }
+
+        val navView = findViewById<NavigationView>(R.id.navView)
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.navMenuNotifications -> {
+                    val intent = Intent(this, NotificationsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
+
     }
 }
