@@ -67,7 +67,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
 
                     hourText.text = dateString
                     tempText.text = formattedTemp
-                    imageView.setImageDrawable(ContentManager.getImage(itemView.context, hour.weather[0].icon))
+                    imageView.setImageDrawable(ContentManager.getIcon(itemView.context, hour.weather[0].icon))
 
                     hourText.id = View.generateViewId()
                     tempText.id = View.generateViewId()
@@ -106,7 +106,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                     dayText.text = dateString
                     tempText.text = formattedTemp
                     popText.text = formattedPop
-                    imageView.setImageDrawable(ContentManager.getImage(itemView.context, day.weather[0].icon))
+                    imageView.setImageDrawable(ContentManager.getIcon(itemView.context, day.weather[0].icon))
 
                     dayText.id = View.generateViewId()
                     tempText.id = View.generateViewId()

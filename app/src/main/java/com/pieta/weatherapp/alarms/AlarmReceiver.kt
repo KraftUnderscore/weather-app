@@ -15,7 +15,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val wakeLock: PowerManager.WakeLock =
                 (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
                     newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WeatherApp::UpdateWeather").apply {
-                        acquire(15 * 1000L) // 15 seconds
+                        acquire(10 * 1000L) // 10 seconds
                     }
                 }
         Log.i("WeatherApp", "WakeLock set")
@@ -56,6 +56,7 @@ class AlarmReceiver : BroadcastReceiver() {
             }
             requestHandler.run(handler)
         }
+
         LocationHelper.getLocation(context, function)
     }
 

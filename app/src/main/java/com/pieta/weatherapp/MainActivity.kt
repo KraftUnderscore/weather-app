@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
@@ -19,15 +20,13 @@ import com.pieta.weatherapp.adapters.ViewPagerAdapter
 import com.pieta.weatherapp.alarms.AlarmCreator
 import com.pieta.weatherapp.alarms.AlarmReceiver
 import com.pieta.weatherapp.alarms.NotificationsManager
-import com.pieta.weatherapp.data.LocationHelper
-import com.pieta.weatherapp.data.RequestHandler
-import com.pieta.weatherapp.data.ResponseParser
-import com.pieta.weatherapp.data.Serializer
+import com.pieta.weatherapp.data.*
 import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
     private val serializer = Serializer()
+    private lateinit var backgroundImage: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +38,15 @@ class MainActivity : AppCompatActivity() {
         NotificationsManager.createNotificationChannel(this)
 
         val viewPager = findViewById<ViewPager2>(R.id.view_pager)
-
+        backgroundImage = findViewById(R.id.mainBackgroundImage)
         initializeButtons(viewPager)
         initializeNavMenu()
         initializeAdapter(viewPager)
     }
 
     private fun initializeAdapter(viewPager: ViewPager2) {
-        //val loaded = serializer.loadWeather(this)
-        val loaded: String? = null
+        val loaded = serializer.loadWeather(this)
+        //val loaded: String? = null
         if (loaded == null || loaded == "") {
             updateAll(viewPager)
         } else {
@@ -56,6 +55,10 @@ class MainActivity : AppCompatActivity() {
             val cityName = serializer.loadLastCity(this) ?: "-"
             val adapter = ViewPagerAdapter(cityName, d, h)
             viewPager.adapter = adapter
+            val now = h?.get(0)
+            if (now != null) {
+                backgroundImage.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
+            }
         }
     }
 
@@ -77,11 +80,15 @@ class MainActivity : AppCompatActivity() {
                     serializer.saveLastCityName(city, this)
                     responseParser.parse(s)
                     Log.i("WeatherApp", "RequestParsed")
-
-                    val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, responseParser.hourly)
+                    val h = responseParser.hourly
+                    val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, h)
                     runOnUiThread {
                         Log.i("WeatherApp", "AdapterReplaced")
                         viewPager.adapter = loadedAdapter
+                        val now = h?.get(0)
+                        if (now != null) {
+                            backgroundImage.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
+                        }
                     }
                     serializer.saveWeather(serializer.serializeWeather(responseParser.daily, responseParser.hourly), this)
                 }

@@ -14,12 +14,12 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/mainBackgroundImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleX="3"
-            android:scaleY="4"
-            android:src="@drawable/bg_img"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:src="@drawable/bg_13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

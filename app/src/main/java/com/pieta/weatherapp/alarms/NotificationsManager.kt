@@ -30,6 +30,7 @@ object NotificationsManager {
     }
 
     fun sendNotification(context: Context, message: String) {
+        if(message == "") return
         val notificationID = 123456
 
         val channelID = "com.pieta.weatherapp.updateweather"

@@ -7,15 +7,15 @@
         android:title="Zaktualizuj lokalizację" />
 
     <item
-        android:id="@+id/navMenuChangeUnits"
-        android:icon="@drawable/ic_settings"
-        android:title="Przełącz na Fahrenheita" />
-
-    <item
         android:id="@+id/navMenuNotifications"
         android:icon="@drawable/ic_notifications"
         android:clickable="true"
         android:title="Powiadomienia" />
+
+    <item
+        android:id="@+id/navMenuCredits"
+        android:icon="@drawable/ic_credits"
+        android:title="Podziękowania" />
 
     <item
         android:id="@+id/navMenuFeedback"
