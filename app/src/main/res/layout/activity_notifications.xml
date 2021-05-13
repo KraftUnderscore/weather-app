@@ -32,14 +32,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/alertGroupRain"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/alertGroupHum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationsBar"
-        app:layout_constraintVertical_chainStyle="spread">
+        app:layout_constraintTop_toBottomOf="@+id/notificationsBar">
 
         <Switch
             android:id="@+id/notificationsRainSwitch"
@@ -100,9 +99,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/alertGroupHum"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/alertGroupWind"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -168,10 +166,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/alertGroupWind"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/notificationsSaveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -233,5 +230,16 @@
             app:layout_constraintTop_toBottomOf="@+id/notificationsWindDesc" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/notificationsSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zapisz"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alertGroupWind" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

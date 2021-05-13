@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="notificationTitle">Prognoza na najbliższą godzinę</string>
+    <string name="notificationRainMessage">Szansa na opady: %1$s</string>
+    <string name="notificationHumMessage">Przewidywana wilgotność: %1$s</string>
+    <string name="notificationWindMessage">Spodziewana prędkość wiatru: %1$s</string>
 </resources>

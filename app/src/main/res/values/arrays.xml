@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="con_01">
+        <item>Śliczna pogoda, nic tylko korzystać! 😀</item>
+        <item>Będzie tak pięknie, że musisz wyjść na spacer C:</item>
+        <item>Większość czasu na niebie nie będzie ani jednej chmurki, super!</item>
+    </string-array>
+    <string-array name="con_02">
+        <item>Pojawi się kilka chmurek, ale to nie powód, żeby odmówić sobie spaceru :></item>
+        <item>Możesz zaobserwować rozsiane chmurki na niebie C:</item>
+    </string-array>
+    <string-array name="con_03">
+        <item>Będzie trochę pochmurnie, ale wciąż będzie towarzyszyć Ci słoneczko ☀</item>
+        <item>Niebo będzie pokryte chmurami, ale z prześwitami słońca.</item>
+    </string-array>
+    <string-array name="con_04">
+        <item>Niestety, chmury całkiem zakryją słońce :C</item>
+        <item>Czeka Cię mocne zachmurzenie, jeśli planowałeś się opalać to musisz to przełożyć na inny dzień :(</item>
+    </string-array>
+    <string-array name="con_09">
+        <item>Będzie mocno lało! Uważaj na drogach, pamiętaj o płaszczu przeciwdeszczowym albo parasolce.</item>
+        <item>Z przykrością Ci to mówię, ale będzie bardzo deszczowo w najbliższym czasie :(</item>
+    </string-array>
+    <string-array name="con_10">
+        <item>W najbliższym czasie przelotne opady deszczu. Może nie będzie tak źle, ale lepiej miej parasol pod ręką :)</item>
+        <item>Możesz spotkać się z opadami deszczu - bądź na nie odpowiednio przygotowany!</item>
+    </string-array>
+    <string-array name="con_11">
+        <item>Uważaj! Czyhają na Ciebie niebezpieczne burze! Pamiętaj, żeby nigdy nie chować się pod drzewem.</item>
+        <item>Piorunująca pogoda! Spodziewaj się burzy :C</item>
+    </string-array>
+    <string-array name="con_13">
+        <item>Ho, ho, ho! Nadchodzą śniegi C: Jeśli gdzieś idziesz to pamiętaj, żeby ubrać się cieplutko.</item>
+        <item>Jesteś gotowy na lepienie bałwanów? Nie? To lepiej się przygotuj, bo czekają Cię śniegi!</item>
+    </string-array>
+    <string-array name="con_50">
+        <item>Hm, nie widzę co tu jest napisane. To przez tę głupią mgłę! Uważaj, będzie ograniczona widoczność.</item>
+        <item>Nadchodzą gęste mgły, zachowaj zwiększoną czujność na drogach. Jeśli masz to załóż odblask na ubranie.</item>
+    </string-array>
+</resources>

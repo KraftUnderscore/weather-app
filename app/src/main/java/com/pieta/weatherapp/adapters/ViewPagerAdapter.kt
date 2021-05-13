@@ -1,14 +1,11 @@
 package com.pieta.weatherapp.adapters
 
-import android.annotation.SuppressLint
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.pieta.weatherapp.R
 import com.pieta.weatherapp.data.ContentManager
@@ -48,7 +45,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
             else
             {
                 val now = hourly[0]
-                hourlyMessageText.text = now.weather[0].description
+                hourlyMessageText.text = ContentManager.getHourlyMessage(itemView.context, hourly)
                 hourlyCityText.text = city
                 hourlyActualTempText.text = ("%.0f".format(now.temp - 273.15) + "°")
                 hourlyFeelsLikeText.text = ("%.0f".format(now.feels_like - 273.15)+ "°")
@@ -92,7 +89,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                 dailyMessageText.text = "-"
                 dailyCityText.text = city
             } else {
-                dailyMessageText.text = "Nice weather!"
+                dailyMessageText.text = ContentManager.getDailyMessage(itemView.context, daily)
                 dailyCityText.text = city
                 for (day in daily) {
                     val view = LayoutInflater.from(itemView.context).inflate(R.layout.daily_scroll_item, dailyScrollLayout, true)
@@ -115,6 +112,11 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                     tempText.id = View.generateViewId()
                     popText.id = View.generateViewId()
                     imageView.id = View.generateViewId()
+                    if(day == daily.last()) continue
+                    val horizontalLine = View(itemView.context)
+                    horizontalLine.setBackgroundColor(itemView.context.resources.getColor(R.color.white))
+                    horizontalLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2)
+                    dailyScrollLayout.addView(horizontalLine)
                 }
             }
         }

@@ -2,11 +2,8 @@ package com.pieta.weatherapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.SeekBar
+import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.Switch
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pieta.weatherapp.data.NotificationSettings
 import com.pieta.weatherapp.data.Serializer
@@ -28,6 +25,8 @@ class NotificationsActivity : AppCompatActivity() {
         lateinit var humSwitch: Switch
         lateinit var windSwitch: Switch
 
+        lateinit var saveButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notifications)
@@ -40,7 +39,7 @@ class NotificationsActivity : AppCompatActivity() {
     private fun addAllListeners() {
         rainBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                rainValue.text = progress.toString()
+                rainValue.text = ("$progress%")
                 notificationSettings.pop = progress.toFloat() / 100f
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -49,7 +48,7 @@ class NotificationsActivity : AppCompatActivity() {
 
         humBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                humValue.text = progress.toString()
+                humValue.text = ("$progress%")
                 notificationSettings.humidity = progress
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -58,7 +57,7 @@ class NotificationsActivity : AppCompatActivity() {
 
         windBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                windValue.text = progress.toString()
+                windValue.text = ("$progress km/h")
                 notificationSettings.wind_speed = progress.toFloat()
             }
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -68,6 +67,8 @@ class NotificationsActivity : AppCompatActivity() {
         rainSwitch.setOnClickListener { notificationSettings.popActive = rainSwitch.isChecked }
         humSwitch.setOnClickListener { notificationSettings.humidityActive = humSwitch.isChecked }
         windSwitch.setOnClickListener { notificationSettings.windActive = windSwitch.isChecked }
+
+        saveButton.setOnClickListener { this.onBackPressed() }
     }
 
     private fun findAllViews() {
@@ -86,27 +87,31 @@ class NotificationsActivity : AppCompatActivity() {
         rainSwitch = findViewById(R.id.notificationsRainSwitch)
         humSwitch = findViewById(R.id.notificationsHumSwitch)
         windSwitch = findViewById(R.id.notificationsWindSwitch)
+
+        saveButton = findViewById(R.id.notificationsSaveButton)
     }
 
     private fun displayInitialSettings() {
         val loadedSettings = serializer.loadNotifications(this)
-        if (loadedSettings == null) {
-            rainValue.text = 1.toString()
-            humValue.text = 1.toString()
-            windValue.text = 1.toString()
+        val settings = loadedSettings?.let { serializer.deserializeNotifications(it) }
+        if (settings == null) {
+            notificationSettings = NotificationSettings(false, popActive = false, pop = 0f, windActive = false, wind_speed = 0f, humidityActive = false, humidity = 0)
+            rainValue.text = ("0%")
+            humValue.text = ("0%")
+            windValue.text = ("0 km/h")
 
-            rainBar.progress = 1
-            humBar.progress = 1
-            windBar.progress = 1
+            rainBar.progress = 0
+            humBar.progress = 0
+            windBar.progress = 0
 
             rainSwitch.isChecked = false
             humSwitch.isChecked = false
             windSwitch.isChecked = false
         } else {
-            notificationSettings = serializer.deserializeNotifications(loadedSettings)!!
-            rainValue.text = notificationSettings.pop.toString()
-            humValue.text = notificationSettings.humidity.toString()
-            windValue.text = notificationSettings.wind_speed.toString()
+            notificationSettings = settings
+            rainValue.text = ("${notificationSettings.pop}%")
+            humValue.text = ("${notificationSettings.humidity}%")
+            windValue.text = ("${notificationSettings.wind_speed} km/h")
 
             rainBar.progress = (notificationSettings.pop * 100).toInt()
             humBar.progress = notificationSettings.humidity

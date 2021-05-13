@@ -9,6 +9,7 @@ import java.lang.IllegalStateException
 class Serializer {
     private val separator = ";-;"
     private val weatherStoreKey = "weather_data"
+    private val cityStoreKey = "city_data"
     private val settingsStoreKey = "settings_data"
     private val notificationsStoreKey = "notifications_data"
     private val preferencesName = "weatherApp"
@@ -68,6 +69,10 @@ class Serializer {
         save(data, context, notificationsStoreKey)
     }
 
+    fun saveLastCityName(data: String, context: Context) {
+        save(data, context, cityStoreKey)
+    }
+
     private fun save(data: String, context: Context, key: String) {
         if(data == "") return
         val sharedPreferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
@@ -83,6 +88,10 @@ class Serializer {
 
     fun loadNotifications(context: Context) : String? {
         return load(context, notificationsStoreKey)
+    }
+
+    fun loadLastCity(context: Context) : String? {
+        return load(context, cityStoreKey)
     }
 
     private fun load(context: Context, key: String) : String? {

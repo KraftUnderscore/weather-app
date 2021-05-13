@@ -36,10 +36,11 @@
         <TextView
             android:id="@+id/dailyMessageText"
             android:layout_width="match_parent"
-            android:layout_height="153dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8sp"
             android:text="Info tygodniowe"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -66,7 +67,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Your city"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="30sp" />
 
         <ScrollView
             android:layout_width="match_parent"

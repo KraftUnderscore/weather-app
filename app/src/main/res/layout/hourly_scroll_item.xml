@@ -12,12 +12,13 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/hourlyScrollItemIcon"
-        android:layout_width="96sp"
-        android:layout_height="96sp"
+        android:layout_width="64sp"
+        android:layout_height="64sp"
         android:src="@drawable/ic_launcher_foreground" />
 
     <TextView
@@ -26,5 +27,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="TextView"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="24sp" />
 </LinearLayout>
