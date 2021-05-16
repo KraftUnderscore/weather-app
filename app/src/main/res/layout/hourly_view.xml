@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,7 +27,7 @@
             android:layout_height="46dp"
             android:layout_marginTop="0dp"
             android:gravity="center"
-            android:text="Dzień dobry!"
+            android:text="@string/greetings"
             android:textColor="@color/white"
             app:autoSizeMaxTextSize="128sp"
             app:autoSizeMinTextSize="32sp"
@@ -44,7 +43,6 @@
             android:layout_marginEnd="8sp"
             android:layout_marginRight="8sp"
             android:layout_marginBottom="8sp"
-            android:text="MessageText"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -71,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginBottom="8dp"
             android:gravity="bottom"
             android:orientation="horizontal"
@@ -84,9 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Odczuwalna:"
+                android:text="@string/feels_like"
                 android:textColor="@color/white" />
 
             <TextView
@@ -95,7 +91,6 @@
                 android:layout_height="38dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="3°"
                 android:textColor="@color/white"
                 app:autoSizeMaxTextSize="64sp"
                 app:autoSizeMinTextSize="16sp"
@@ -107,7 +102,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="City"
             android:textColor="@color/white"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,10 +114,8 @@
             android:layout_width="130dp"
             android:layout_height="111dp"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="26°"
             android:textColor="@color/white"
             app:autoSizeMaxTextSize="128sp"
             app:autoSizeMinTextSize="64sp"
@@ -145,10 +137,10 @@
 
             <TextView
                 android:id="@+id/hourlyRainLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Opady: "
+                android:text="@string/rainfall"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -156,7 +148,6 @@
                 android:id="@+id/hourlyRainText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="40%"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -178,7 +169,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Wiatr: "
+                android:text="@string/wind"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -186,17 +177,16 @@
                 android:id="@+id/hourlyWindSpeedText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12.4"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/hourlyWindDegreeText"
+            <ImageView
+                android:id="@+id/hourlyWindDegreeImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123"
-                android:textColor="@color/purple_200"
-                android:textSize="18sp" />
+                android:layout_weight="1"
+                android:contentDescription="@string/wind_direction"
+                app:srcCompat="@drawable/ic_wind" />
         </LinearLayout>
 
         <LinearLayout
@@ -211,10 +201,10 @@
 
             <TextView
                 android:id="@+id/hourlyHumidityLabel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Wilgotność: "
+                android:text="@string/humidity"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -222,7 +212,6 @@
                 android:id="@+id/hourlyHumidityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="50%"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -250,7 +239,7 @@
             android:layout_height="38dp"
             android:layout_marginBottom="8sp"
             android:gravity="center"
-            android:text="Najbliższa prognoza"
+            android:text="@string/hourly_forecast"
             android:textColor="@color/white"
             app:autoSizeMaxTextSize="64sp"
             app:autoSizeMinTextSize="16sp"

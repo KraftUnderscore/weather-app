@@ -25,7 +25,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
         private val hourlyRainText = itemView.findViewById<TextView>(R.id.hourlyRainText)
         private val hourlyHumidityText = itemView.findViewById<TextView>(R.id.hourlyHumidityText)
         private val hourlyWindSpeedText = itemView.findViewById<TextView>(R.id.hourlyWindSpeedText)
-        private val hourlyWindDegreeText = itemView.findViewById<TextView>(R.id.hourlyWindDegreeText)
+        private val hourlyWindDegreeImage = itemView.findViewById<ImageView>(R.id.hourlyWindDegreeImage)
         private val hourlyWeatherLayout = itemView.findViewById(R.id.hourlyWeatherLayout) as LinearLayout
 
         fun populateViews(hourly: List<Hourly>?)
@@ -40,7 +40,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                 hourlyRainText.text = "-"
                 hourlyHumidityText.text = "-"
                 hourlyWindSpeedText.text = "-"
-                hourlyWindDegreeText.text = "-"
+                hourlyWindDegreeImage.rotation = 90f
             }
             else
             {
@@ -52,7 +52,7 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
                 hourlyRainText.text = ("%.0f".format(100f * now.pop) + "%")
                 hourlyHumidityText.text = (now.humidity.toString() + "%")
                 hourlyWindSpeedText.text = (now.wind_speed.toString() + "km/h")
-                hourlyWindDegreeText.text = now.wind_deg.toString()
+                hourlyWindDegreeImage.rotation = (now.wind_deg - 90).toFloat()
 
                 for (hour in hourly)
                 {

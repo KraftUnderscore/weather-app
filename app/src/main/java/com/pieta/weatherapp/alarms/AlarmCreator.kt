@@ -21,22 +21,12 @@ class AlarmCreator {
                 Log.i("WeatherApp", existingIntent.toString())
                 val pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0)
 
-//                alarmManager.setInexactRepeating(
-//                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                        SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-//                        AlarmManager.INTERVAL_HALF_HOUR,
-//                        pendingIntent
-//                )
-
                 alarmManager.setRepeating(
-                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime() + 10 * 1000,
-                        10 * 1000,
-                        pendingIntent
+                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HOUR,
+                    AlarmManager.INTERVAL_HOUR,
+                    pendingIntent
                 )
-                val existingIntent2 = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE) == null
-                Log.i("WeatherApp", existingIntent2.toString())
-
             }
         }
     }

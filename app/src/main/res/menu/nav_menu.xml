@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navMenuUpdateLocation"
         android:icon="@drawable/ic_location"
-        android:title="Zaktualizuj lokalizację" />
+        android:title="@string/menu_update_location" />
 
     <item
         android:id="@+id/navMenuNotifications"
         android:icon="@drawable/ic_notifications"
         android:clickable="true"
-        android:title="Powiadomienia" />
+        android:title="@string/menu_notifications" />
 
     <item
         android:id="@+id/navMenuCredits"
         android:icon="@drawable/ic_credits"
-        android:title="Podziękowania" />
+        android:title="@string/menu_thanks" />
 
     <item
         android:id="@+id/navMenuFeedback"
         android:icon="@drawable/ic_loop"
-        android:title="Feedback" />
+        android:title="@string/menu_feedback" />
 
     <item
         android:id="@+id/navMenuRate"
         android:icon="@drawable/ic_star"
-        android:title="Oceń aplikację" />
+        android:title="@string/menu_rate" />
 </menu>

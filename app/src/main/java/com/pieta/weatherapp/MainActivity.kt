@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         LocationHelper.requestPermissions(this)
 
-        //AlarmCreator.createAlarm(this)
-        createAlarm(this)
+        AlarmCreator.createAlarm(this)
         NotificationsManager.createNotificationChannel(this)
 
         val viewPager = findViewById<ViewPager2>(R.id.view_pager)
@@ -158,35 +157,5 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-    }
-
-    fun createAlarm(context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = Intent(context, AlarmReceiver::class.java)
-
-        val existingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE)
-        Log.i("WeatherApp", (existingIntent == null).toString())
-        if(existingIntent == null)
-        {
-            Log.i("WeatherApp", existingIntent.toString())
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0)
-
-//                alarmManager.setInexactRepeating(
-//                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                        SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HALF_HOUR,
-//                        AlarmManager.INTERVAL_HALF_HOUR,
-//                        pendingIntent
-//                )
-
-            alarmManager.setRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 10 * 1000,
-                    10 * 1000,
-                    pendingIntent
-            )
-            val existingIntent2 = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE) == null
-            Log.i("WeatherApp", existingIntent2.toString())
-
-        }
     }
 }
