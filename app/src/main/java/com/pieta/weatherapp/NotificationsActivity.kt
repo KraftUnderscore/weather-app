@@ -21,11 +21,11 @@ class NotificationsActivity : AppCompatActivity() {
         private lateinit var humBar: SeekBar
         private lateinit var windBar: SeekBar
 
-        lateinit var rainSwitch: Switch
-        lateinit var humSwitch: Switch
-        lateinit var windSwitch: Switch
+        private lateinit var rainSwitch: Switch
+        private lateinit var humSwitch: Switch
+        private lateinit var windSwitch: Switch
 
-        lateinit var saveButton: Button
+        private lateinit var saveButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +127,6 @@ class NotificationsActivity : AppCompatActivity() {
         val serialized = serializer.serializeNotifications(notificationSettings)
         serializer.saveNotifications(serialized, this)
         Toast.makeText(this, "Ustawienia zapisane!", Toast.LENGTH_SHORT).show()
-        finish();
+        finish()
     }
 }

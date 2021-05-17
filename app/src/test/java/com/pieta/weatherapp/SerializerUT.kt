@@ -48,8 +48,8 @@ class SerializerUT {
 
     @Test
     fun deserialize_data_single_string() {
-        val single_string = "[{\"dt\" : 10, \"pop\" : 0.5, \"temp\" : {\"day\" : 15.3}, \"weather\" : [{\"description\" : \"desc\", \"icon\" : \"abc\", \"id\" : 20, \"main\" : \"test\"}]}]"
-        val (d, h) = serializer.deserializeWeather(single_string)
+        val singleString = "[{\"dt\" : 10, \"pop\" : 0.5, \"temp\" : {\"day\" : 15.3}, \"weather\" : [{\"description\" : \"desc\", \"icon\" : \"abc\", \"id\" : 20, \"main\" : \"test\"}]}]"
+        val (d, h) = serializer.deserializeWeather(singleString)
         assertNull(d)
         assertNull(h)
     }

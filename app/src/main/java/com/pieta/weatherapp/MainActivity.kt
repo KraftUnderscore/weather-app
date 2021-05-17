@@ -6,12 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.PopupWindow
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -28,6 +24,7 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
     private val serializer = Serializer()
     private lateinit var backgroundImage: ImageView
+    private lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,20 +34,18 @@ class MainActivity : AppCompatActivity() {
         AlarmCreator.createAlarm(this)
         NotificationsManager.createNotificationChannel(this)
 
-        val viewPager = findViewById<ViewPager2>(R.id.view_pager)
+        viewPager = findViewById(R.id.view_pager)
         backgroundImage = findViewById(R.id.mainBackgroundImage)
-        initializeButtons(viewPager)
+        initializeButtons()
         initializeNavMenu()
-        initializeAdapter(viewPager)
+        initializeAdapter()
     }
 
-    private fun initializeAdapter(viewPager: ViewPager2) {
+    private fun initializeAdapter() {
         val loaded = serializer.loadWeather(this)
-        //val loaded: String? = null
         if (loaded == null || loaded == "") {
-            updateAll(viewPager)
+            updateAll()
         } else {
-            Log.i("WeatherApp", "WasNotNull")
             val (d, h) = serializer.deserializeWeather(loaded)
             val cityName = serializer.loadLastCity(this) ?: "-"
             val adapter = ViewPagerAdapter(cityName, d, h)
@@ -62,8 +57,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateAll(viewPager: ViewPager2) {
-        Log.i("WeatherApp", "WasNull")
+    private fun updateAll() {
+        Toast.makeText(this, "Pobieram dane pogodowe...", Toast.LENGTH_LONG).show()
         val adapter = ViewPagerAdapter("-", null, null)
         viewPager.adapter = adapter
 
@@ -73,17 +68,14 @@ class MainActivity : AppCompatActivity() {
             requestHandler.lat = lat
 
             requestHandler.run { s: String ->
-                Log.i("WeatherApp", "RequestFetched")
                 val responseParser = ResponseParser()
                 thread {
                     val city = requestHandler.getCity()
                     serializer.saveLastCityName(city, this)
                     responseParser.parse(s)
-                    Log.i("WeatherApp", "RequestParsed")
                     val h = responseParser.hourly
                     val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, h)
                     runOnUiThread {
-                        Log.i("WeatherApp", "AdapterReplaced")
                         viewPager.adapter = loadedAdapter
                         val now = h?.get(0)
                         if (now != null) {
@@ -98,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         LocationHelper.getLocation(this, function)
     }
 
-    private fun initializeButtons(viewPager: ViewPager2) {
+    private fun initializeButtons() {
         val menuHourlyButton = findViewById<TextView>(R.id.menu_hourly_button)
         val menuDailyButton = findViewById<TextView>(R.id.menu_daily_button)
 
@@ -164,12 +156,13 @@ class MainActivity : AppCompatActivity() {
                     val popupWindow = PopupWindow(popupView, width, height, focusable)
                     popupWindow.showAtLocation(navigationDrawer, Gravity.CENTER, 0, 0)
                     navigationDrawer.closeDrawer(GravityCompat.START)
-                    popupView.setOnTouchListener(object : View.OnTouchListener {
-                        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-                            popupWindow.dismiss()
-                            return true
-                        }
-                    })
+                    popupView.setOnTouchListener { v, event ->
+                        popupWindow.dismiss()
+                        true
+                    }
+                }
+                R.id.navMenuUpdateLocation -> {
+                    updateAll()
                 }
             }
             true

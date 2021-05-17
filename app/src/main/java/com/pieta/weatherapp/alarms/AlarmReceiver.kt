@@ -10,7 +10,6 @@ import kotlin.concurrent.thread
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.i("WeatherApp", "Hello?")
         if(context == null) return
         val wakeLock: PowerManager.WakeLock =
                 (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
@@ -18,36 +17,24 @@ class AlarmReceiver : BroadcastReceiver() {
                         acquire(10 * 1000L) // 10 seconds
                     }
                 }
-        Log.i("WeatherApp", "WakeLock set")
         val requestHandler = RequestHandler(context)
         val serializer = Serializer()
         val handler = { s: String ->
             val responseParser = ResponseParser()
-            Log.i("WeatherApp", "Parsing response")
             responseParser.parse(s)
-            Log.i("WeatherApp", "Parsed")
-
             val hour = responseParser.hourly?.get(0)
             if(hour != null) {
-                Log.i("WeatherApp", "NotNullHour")
                 val settings = serializer.loadNotifications(context)?.let { serializer.deserializeNotifications(it) }
                 if(settings != null) {
-                    Log.i("WeatherApp", "NotNullSettings")
                     val notificationMessage = ContentManager.buildNotification(context, settings, hour)
                     NotificationsManager.sendNotification(context, notificationMessage)
                 }
             }
-
-            Log.i("WeatherApp", "Serializing")
-            val serialized = serializer.serializeWeather(responseParser.daily, responseParser.hourly);
-            Log.i("WeatherApp", "Serialized")
-
+            val serialized = serializer.serializeWeather(responseParser.daily, responseParser.hourly)
             serializer.saveWeather(serialized, context)
-            Log.i("WeatherApp", "Release Lock")
             wakeLock.release()
         }
         val function = { lat: Float, lon: Float ->
-            Log.i("WeatherApp", "Got location")
             requestHandler.lat = lat
             requestHandler.lon = lon
             thread {

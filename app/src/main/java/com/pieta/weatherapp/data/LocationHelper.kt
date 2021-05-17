@@ -28,16 +28,10 @@ object LocationHelper {
 
     @SuppressLint("MissingPermission")
     fun getLocation(context: Context, f: (Float, Float) -> Unit) {
-        Log.i("WeatherApp", "Getting location")
         if(!permissionsCheck(context)) return
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        Log.i("WeatherApp", "Got client")
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            Log.i("WeatherApp", "${location == null}")
-
             if (location != null) {
-                Log.i("WeatherApp", "Not empty!")
-                Log.i("WeatherApp", "long: ${location.longitude} lat: ${location.latitude}")
                 f(location.latitude.toFloat(), location.longitude.toFloat())
             } else {
                 f(51.1079f, 17.0385f)

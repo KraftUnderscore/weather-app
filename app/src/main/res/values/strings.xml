@@ -5,11 +5,11 @@
     <string name="notificationHumMessage">Przewidywana wilgotność: %1$s</string>
     <string name="notificationWindMessage">Spodziewana prędkość wiatru: %1$s</string>
     <string name="greetings">Dzień dobry!</string>
-    <string name="feels_like">Odczuwalna:</string>
-    <string name="rainfall">Opady:</string>
-    <string name="wind">Wiatr:</string>
+    <string name="feels_like">Odczuwalna: </string>
+    <string name="rainfall">Opady: </string>
+    <string name="wind">Wiatr: </string>
     <string name="wind_direction">Wind direction</string>
-    <string name="humidity">Wilgotność:</string>
+    <string name="humidity">Wilgotność: </string>
     <string name="hourly_forecast">Najbliższa prognoza</string>
     <string name="backround_desc">backgroundImage</string>
     <string name="notifications_title">Ustawienia powiadomień</string>
@@ -22,7 +22,6 @@
     <string name="save_notifications">Zapisz</string>
     <string name="menu_today">Dzisiaj</string>
     <string name="menu_week">Tydzień</string>
-    <string name="daily_rainfalls">Opady:</string>
     <string name="weather_icon">Weather icon</string>
     <string name="upcoming_week">Nadchodzący tydzień</string>
     <string name="author">by Sebatian Pięta</string>

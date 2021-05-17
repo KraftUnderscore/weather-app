@@ -19,9 +19,9 @@ class ResponseParser {
             val parsed = klaxon.parseJsonObject(StringReader(json))
             val hourlyArray = parsed.array<Any>("hourly")
             val dailyArray = parsed.array<Any>("daily")
-            hourly = hourlyArray?.let { klaxon.parseFromJsonArray<Hourly>(it) }
+            hourly = hourlyArray?.let { klaxon.parseFromJsonArray(it) }
             if(hourly != null) hourly = hourly!!.dropLast(hourly!!.size - 24)
-            daily = dailyArray?.let { klaxon.parseFromJsonArray<Daily>(it) }
+            daily = dailyArray?.let { klaxon.parseFromJsonArray(it) }
             if(daily != null) daily = daily!!.dropLast(daily!!.size - 7)
         }
         catch (e: KlaxonException) {}

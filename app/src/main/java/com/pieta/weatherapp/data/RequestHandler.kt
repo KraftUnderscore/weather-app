@@ -3,7 +3,6 @@ package com.pieta.weatherapp.data
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest

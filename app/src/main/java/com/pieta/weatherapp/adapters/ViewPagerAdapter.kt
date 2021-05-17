@@ -30,7 +30,6 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
 
         fun populateViews(hourly: List<Hourly>?)
         {
-
             if(hourly == null || hourly.isEmpty())
             {
                 hourlyMessageText.text = "-"

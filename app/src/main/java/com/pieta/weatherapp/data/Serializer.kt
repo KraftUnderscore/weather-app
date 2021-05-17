@@ -10,7 +10,6 @@ class Serializer {
     private val separator = ";-;"
     private val weatherStoreKey = "weather_data"
     private val cityStoreKey = "city_data"
-    private val settingsStoreKey = "settings_data"
     private val notificationsStoreKey = "notifications_data"
     private val preferencesName = "weatherApp"
     private val klaxon = Klaxon()

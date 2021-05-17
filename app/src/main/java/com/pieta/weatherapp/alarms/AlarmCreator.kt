@@ -15,12 +15,9 @@ class AlarmCreator {
             val alarmIntent = Intent(context, AlarmReceiver::class.java)
 
             val existingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE)
-            Log.i("WeatherApp", (existingIntent == null).toString())
             if(existingIntent == null)
             {
-                Log.i("WeatherApp", existingIntent.toString())
                 val pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0)
-
                 alarmManager.setRepeating(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_HOUR,
