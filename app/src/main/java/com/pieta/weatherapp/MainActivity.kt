@@ -3,6 +3,7 @@ package com.pieta.weatherapp
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -31,14 +32,21 @@ class MainActivity : AppCompatActivity() {
     private val serializer = Serializer()
     private lateinit var backgroundImage: ImageView
     private lateinit var viewPager: ViewPager2
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onStart() {
         isRunning = true
+        if(::mediaPlayer.isInitialized) {
+            mediaPlayer.start()
+        }
         super.onStart()
     }
 
     override fun onStop() {
         isRunning = false
+        if(::mediaPlayer.isInitialized) {
+            mediaPlayer.pause()
+        }
         super.onStop()
     }
 
@@ -76,6 +84,12 @@ class MainActivity : AppCompatActivity() {
             val now = h?.get(0)
             if (now != null) {
                 backgroundImage.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
+                if(::mediaPlayer.isInitialized) {
+                    mediaPlayer.release()
+                }
+                mediaPlayer = MediaPlayer.create(this, ContentManager.getSound(now.weather[0].icon))
+                mediaPlayer.isLooping = true
+                mediaPlayer.start()
             }
         }
     }
@@ -103,6 +117,12 @@ class MainActivity : AppCompatActivity() {
                         val now = h?.get(0)
                         if (now != null) {
                             backgroundImage.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
+                            if(::mediaPlayer.isInitialized) {
+                                mediaPlayer.release()
+                            }
+                            mediaPlayer = MediaPlayer.create(this, ContentManager.getSound(now.weather[0].icon))
+                            mediaPlayer.isLooping = true
+                            mediaPlayer.start()
                         }
                     }
                     serializer.saveWeather(serializer.serializeWeather(responseParser.daily, responseParser.hourly), this)
