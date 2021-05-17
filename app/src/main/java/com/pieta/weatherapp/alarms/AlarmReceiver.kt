@@ -37,6 +37,8 @@ class AlarmReceiver : BroadcastReceiver() {
             }
             val serialized = serializer.serializeWeather(responseParser.daily, responseParser.hourly)
             serializer.saveWeather(serialized, context)
+            val time = System.currentTimeMillis()
+            serializer.saveLastFetchDate(time, context)
             wakeLock.release()
         }
         val function = { lat: Float, lon: Float ->

@@ -1,6 +1,7 @@
 package com.pieta.weatherapp.data
 
 import android.content.Context
+import android.util.Log
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.KlaxonException
 import java.io.StringReader
@@ -10,6 +11,7 @@ class Serializer {
     private val separator = ";-;"
     private val weatherStoreKey = "weather_data"
     private val cityStoreKey = "city_data"
+    private val lastFetchStoreKey = "last_fetch_data"
     private val notificationsStoreKey = "notifications_data"
     private val preferencesName = "weatherApp"
     private val klaxon = Klaxon()
@@ -72,6 +74,11 @@ class Serializer {
         save(data, context, cityStoreKey)
     }
 
+    fun saveLastFetchDate(data: Long, context: Context) {
+        Log.i("WeatherApp", "Saving $data")
+        save(data.toString(), context, lastFetchStoreKey)
+    }
+
     private fun save(data: String, context: Context, key: String) {
         if(data == "") return
         val sharedPreferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
@@ -91,6 +98,17 @@ class Serializer {
 
     fun loadLastCity(context: Context) : String? {
         return load(context, cityStoreKey)
+    }
+
+    fun loadLastFetchDate(context: Context) : Long {
+        val loaded = load(context, lastFetchStoreKey)
+        Log.i("WeatherApp", "Loading $loaded")
+        return if(loaded == null) 0
+        else
+        {
+            if(loaded == "") 0
+            else loaded.toLong()
+        }
     }
 
     private fun load(context: Context, key: String) : String? {

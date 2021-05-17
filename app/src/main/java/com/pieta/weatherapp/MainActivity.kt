@@ -62,6 +62,13 @@ class MainActivity : AppCompatActivity() {
         if (loaded == null || loaded == "") {
             updateAll()
         } else {
+            val time = System.currentTimeMillis()
+            val loadedTime = serializer.loadLastFetchDate(this)
+            val hourInMilliseconds = 3600000
+            if(time - loadedTime + loadedTime % hourInMilliseconds > hourInMilliseconds) {
+                updateAll()
+                return
+            }
             val (d, h) = serializer.deserializeWeather(loaded)
             val cityName = serializer.loadLastCity(this) ?: "-"
             val adapter = ViewPagerAdapter(cityName, d, h)
@@ -99,6 +106,8 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     serializer.saveWeather(serializer.serializeWeather(responseParser.daily, responseParser.hourly), this)
+                    val time = System.currentTimeMillis()
+                    serializer.saveLastFetchDate(time, this)
                 }
             }
         }
