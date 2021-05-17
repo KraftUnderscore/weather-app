@@ -1,14 +1,16 @@
 package com.pieta.weatherapp
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -18,7 +20,6 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.navigation.NavigationView
 import com.pieta.weatherapp.adapters.ViewPagerAdapter
 import com.pieta.weatherapp.alarms.AlarmCreator
-import com.pieta.weatherapp.alarms.AlarmReceiver
 import com.pieta.weatherapp.alarms.NotificationsManager
 import com.pieta.weatherapp.data.*
 import kotlin.concurrent.thread
@@ -152,6 +153,23 @@ class MainActivity : AppCompatActivity() {
                 R.id.navMenuNotifications -> {
                     val intent = Intent(this, NotificationsActivity::class.java)
                     startActivity(intent)
+                }
+                R.id.navMenuCredits -> {
+                    val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                    val popupView: View = inflater.inflate(R.layout.credits_popout, null)
+                    val width = LinearLayout.LayoutParams.WRAP_CONTENT
+                    val height = LinearLayout.LayoutParams.WRAP_CONTENT
+                    val focusable = true
+
+                    val popupWindow = PopupWindow(popupView, width, height, focusable)
+                    popupWindow.showAtLocation(navigationDrawer, Gravity.CENTER, 0, 0)
+                    navigationDrawer.closeDrawer(GravityCompat.START)
+                    popupView.setOnTouchListener(object : View.OnTouchListener {
+                        override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                            popupWindow.dismiss()
+                            return true
+                        }
+                    })
                 }
             }
             true
