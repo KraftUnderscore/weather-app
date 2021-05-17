@@ -1,16 +1,21 @@
 package com.pieta.weatherapp.alarms
 
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import android.util.Log
+import com.pieta.weatherapp.MainActivity
 import com.pieta.weatherapp.data.*
 import kotlin.concurrent.thread
+
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if(context == null) return
+        if(MainActivity.isRunning) return
         val wakeLock: PowerManager.WakeLock =
                 (context.getSystemService(Context.POWER_SERVICE) as PowerManager).run {
                     newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "WeatherApp::UpdateWeather").apply {

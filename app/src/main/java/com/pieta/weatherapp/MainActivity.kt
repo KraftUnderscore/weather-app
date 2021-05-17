@@ -1,9 +1,10 @@
 package com.pieta.weatherapp
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -22,9 +23,24 @@ import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        var isRunning = false
+    }
+
     private val serializer = Serializer()
     private lateinit var backgroundImage: ImageView
     private lateinit var viewPager: ViewPager2
+
+    override fun onStart() {
+        isRunning = true
+        super.onStart()
+    }
+
+    override fun onStop() {
+        isRunning = false
+        super.onStop()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,6 +179,20 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navMenuUpdateLocation -> {
                     updateAll()
+                }
+                R.id.navMenuFeedback -> {
+                    val mailIntent = Intent(Intent.ACTION_SENDTO)
+                    val uriText = "mailto:" + Uri.encode("246685@student.pwr.edu.pl") + "?subject=" + Uri.encode("WeatherApp Feedback")
+                    val uri = Uri.parse(uriText)
+                    mailIntent.data = uri
+                    startActivity(Intent.createChooser(mailIntent, "Wyśli maila..."))
+                }
+                R.id.navMenuRate -> {
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                    } catch (e: ActivityNotFoundException) {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                    }
                 }
             }
             true
