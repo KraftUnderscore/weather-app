@@ -8,6 +8,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.pieta.weatherapp.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 object NotificationsManager {
     fun createNotificationChannel(context: Context) {
@@ -24,14 +26,17 @@ object NotificationsManager {
         }
     }
 
-    fun sendNotification(context: Context, message: String) {
+    fun sendNotification(context: Context, message: String, timestamp: Long) {
         if(message == "") return
         val notificationID = 123456
+
+        val format = SimpleDateFormat("HH':00'", Locale.getDefault())
+        val dateString = format.format(Date(timestamp))
 
         val channelID = "com.pieta.weatherapp.updateweather"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = Notification.Builder(context, channelID)
-                    .setContentTitle(context.getString(R.string.notificationTitle))
+                    .setContentTitle(context.getString(R.string.notificationTitle, dateString))
                     .setContentText(message)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
                     .setChannelId(channelID)
@@ -44,7 +49,7 @@ object NotificationsManager {
         } else {
             val notification = NotificationCompat.Builder(context, channelID)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
-                    .setContentTitle(context.getString(R.string.notificationTitle))
+                    .setContentTitle(context.getString(R.string.notificationTitle, dateString))
                     .setContentText(message)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(message))

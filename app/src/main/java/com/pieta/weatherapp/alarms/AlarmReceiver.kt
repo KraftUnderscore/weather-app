@@ -32,7 +32,8 @@ class AlarmReceiver : BroadcastReceiver() {
                 val settings = serializer.loadNotifications(context)?.let { serializer.deserializeNotifications(it) }
                 if(settings != null) {
                     val notificationMessage = ContentManager.buildNotification(context, settings, hour)
-                    NotificationsManager.sendNotification(context, notificationMessage)
+                    val time = System.currentTimeMillis()
+                    NotificationsManager.sendNotification(context, notificationMessage, time)
                 }
             }
             val serialized = serializer.serializeWeather(responseParser.daily, responseParser.hourly)

@@ -24,11 +24,12 @@ class AlarmCreator {
                 val toFullHour = hourInMilliseconds - mod
                 val output = elapsedTime + toFullHour
                 val pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0)
+
                 alarmManager.setRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    output,
-                    AlarmManager.INTERVAL_HOUR,
-                    pendingIntent
+                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        output,
+                        AlarmManager.INTERVAL_HOUR,
+                        pendingIntent
                 )
             }
         }
