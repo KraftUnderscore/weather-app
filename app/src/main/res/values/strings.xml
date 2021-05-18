@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+
     <string name="notificationTitle">Prognoza na godzinę %1$s</string>
     <string name="notificationRainMessage">Szansa na opady: %1$s</string>
     <string name="notificationHumMessage">Przewidywana wilgotność: %1$s</string>
     <string name="notificationWindMessage">Spodziewana prędkość wiatru: %1$s</string>
+
+    <string name="upcoming_week">Nadchodzący tydzień</string>
     <string name="greetings">Dzień dobry!</string>
     <string name="feels_like">Odczuwalna: </string>
     <string name="rainfall">Opady: </string>
@@ -12,6 +15,7 @@
     <string name="humidity">Wilgotność: </string>
     <string name="hourly_forecast">Najbliższa prognoza</string>
     <string name="backround_desc">backgroundImage</string>
+
     <string name="notifications_title">Ustawienia powiadomień</string>
     <string name="rain_warning">Ostrzeżenie przed opadami</string>
     <string name="rain_prob_threshold">Próg prawdopodobieństwa opadów:</string>
@@ -20,18 +24,21 @@
     <string name="wind_warning">Ostrzeżenie przed wiatrem</string>
     <string name="wind_threshold">Próg prędkości wiatru:</string>
     <string name="save_notifications">Zapisz</string>
+
     <string name="menu_today">Dzisiaj</string>
     <string name="menu_week">Tydzień</string>
+    <string name="menu_button">Menu button</string>
+
     <string name="weather_icon">Weather icon</string>
-    <string name="upcoming_week">Nadchodzący tydzień</string>
     <string name="author">by Sebatian Pięta</string>
     <string name="icon_desc">App icon</string>
+
     <string name="menu_update_location">Zaktualizuj lokalizację</string>
     <string name="menu_notifications">Powiadomienia</string>
     <string name="menu_thanks">Podziękowania</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_rate">Oceń aplikację</string>
-    <string name="menu_button">Menu button</string>
+
     <string name="thanks_popup">Podziękowania dla:</string>
     <string name="credits">
         <b>Freepik</b> za ikonki pogodowe\n
@@ -47,4 +54,16 @@
     <string name="press_to_close">
         <i>Naciśnij w dowolnym miejscu, aby zamknąć</i>
     </string>
+
+    <string name="notification_channel_id">com.pieta.weatherapp.updateweather</string>
+    <string name="notification_channel_name">WeatherApp powiadomienia</string>
+    <string name="notification_channel_desc">Wszystkie powiadomienia dla aplikacji.</string>
+
+    <string name="wake_lock_id">WeatherApp::UpdateWeather</string>
+
+    <string name="api_url">https://api.openweathermap.org/data/2.5/onecall?lat=%1$f&amp;lon=%2$f&amp;exclude=current,minutely,alerts&amp;appid=%3$s</string>
+    <string name="default_empty_value">-</string>
+
+    <string name="toast_fetching_data">Pobieram dane pogodowe…</string>
+    <string name="send_mail">Wyśli maila</string>
 </resources>

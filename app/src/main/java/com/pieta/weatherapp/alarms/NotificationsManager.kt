@@ -8,16 +8,19 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.pieta.weatherapp.R
+import com.pieta.weatherapp.data.ContentManager
 import java.text.SimpleDateFormat
 import java.util.*
 
 object NotificationsManager {
+    private const val notificationID = 123456
+
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "WeatherApp powiadomienia"
-            val descriptionText = "Wszystkie powiadomienia dla aplikacji."
+            val name = context.getString(R.string.notification_channel_name)
+            val descriptionText = context.getString(R.string.notification_channel_desc)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("com.pieta.weatherapp.updateweather", name, importance).apply {
+            val channel = NotificationChannel(context.getString(R.string.notification_channel_id), name, importance).apply {
                 description = descriptionText
             }
             val notificationManager: NotificationManager =
@@ -26,17 +29,13 @@ object NotificationsManager {
         }
     }
 
-    fun sendNotification(context: Context, message: String, timestamp: Long) {
+    fun sendNotification(context: Context, message: String) {
         if(message == "") return
-        val notificationID = 123456
 
-        val format = SimpleDateFormat("HH':00'", Locale.getDefault())
-        val dateString = format.format(Date(timestamp))
-
-        val channelID = "com.pieta.weatherapp.updateweather"
+        val channelID = context.getString(R.string.notification_channel_id)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notification = Notification.Builder(context, channelID)
-                    .setContentTitle(context.getString(R.string.notificationTitle, dateString))
+                    .setContentTitle(ContentManager.buildNotificationTitle(context))
                     .setContentText(message)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
                     .setChannelId(channelID)
@@ -49,7 +48,7 @@ object NotificationsManager {
         } else {
             val notification = NotificationCompat.Builder(context, channelID)
                     .setSmallIcon(android.R.drawable.ic_dialog_info)
-                    .setContentTitle(context.getString(R.string.notificationTitle, dateString))
+                    .setContentTitle(ContentManager.buildNotificationTitle(context))
                     .setContentText(message)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(message))

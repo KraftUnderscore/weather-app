@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.content.res.ResourcesCompat
 import com.pieta.weatherapp.R
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 import kotlin.random.Random
 
 object ContentManager {
 
-    private const val maxHourlyMessages = 1
-    private const val maxDailyMessages = 1
+    private const val maxMessages = 1
 
     private val weatherConditions : HashMap<String, WeatherCondition> = hashMapOf(
         "01" to WeatherCondition(R.drawable.ic_01, R.drawable.bg_01, R.array.con_01, R.raw.raw_01), // clear sky
@@ -59,26 +61,10 @@ object ContentManager {
 
         for(hour in hourly) {
             val condition = hour.weather[0].icon.substring(0, 2)
-            val currentValue = conditionsMap[condition]
-            if(currentValue == null) {
-                conditionsMap[condition] = 1
-            } else {
-                conditionsMap[condition] = currentValue + 1
-            }
+            addToHashMap(conditionsMap, condition)
         }
 
-        val sortedMap = conditionsMap.toSortedMap(compareByDescending { it })
-        var message = ""
-        var i = 0
-        for (pair in sortedMap) {
-            message += weatherConditions[pair.key]?.getMessage(context) ?: ""
-            i++
-            if(i == maxHourlyMessages) break
-            message += "\n"
-            message += "\n"
-        }
-
-        return message
+        return generateMessage(conditionsMap, context)
     }
 
     fun getDailyMessage(context: Context, daily: List<Daily>) : String {
@@ -86,29 +72,41 @@ object ContentManager {
 
         for(day in daily) {
             val condition = day.weather[0].icon.substring(0, 2)
-            val currentValue = conditionsMap[condition]
-            if(currentValue == null) {
-                conditionsMap[condition] = 1
-            } else {
-                conditionsMap[condition] = currentValue + 1
-            }
+            addToHashMap(conditionsMap, condition)
         }
 
+        return generateMessage(conditionsMap, context)
+    }
+
+    private fun addToHashMap(conditionsMap: HashMap<String, Int>, condition: String) {
+        val currentValue = conditionsMap[condition]
+        if (currentValue == null) {
+            conditionsMap[condition] = 1
+        } else {
+            conditionsMap[condition] = currentValue + 1
+        }
+    }
+
+    private fun generateMessage(conditionsMap: HashMap<String, Int>, context: Context): String {
         val sortedMap = conditionsMap.toSortedMap(compareByDescending { it })
         var message = ""
         var i = 0
         for (pair in sortedMap) {
             message += weatherConditions[pair.key]?.getMessage(context) ?: ""
-            i++
-            if(i == maxDailyMessages) break
-            message += "\n"
-            message += "\n"
+            i += 1
+            if (i == maxMessages) break
+            message += "\n\n"
         }
 
         return message
     }
 
-    fun buildNotification(context: Context, settings: NotificationSettings, hour: Hourly): String {
+    fun buildNotificationTitle(context: Context): String {
+        val timestamp = System.currentTimeMillis()
+        return context.getString(R.string.notificationTitle, formatFullHour(timestamp))
+    }
+
+    fun buildNotificationMessage(context: Context, settings: NotificationSettings, hour: Hourly): String {
         var output = ""
         if(settings.popActive && settings.pop <= hour.pop) {
             output += context.getString(R.string.notificationRainMessage, ("%.0f".format(100f * hour.pop) + "%"))
@@ -122,5 +120,20 @@ object ContentManager {
             output += context.getString(R.string.notificationWindMessage, (hour.wind_speed.toString() + "km/h"))
         }
         return output
+    }
+
+    fun formatTemp(temp: Float) = "%.0f".format(temp - 273.15) + "°"
+    fun formatPop(pop: Float) = "%.0f".format(100f * pop) + "%"
+    fun formatHum(humidity: Int) = "$humidity%"
+    fun formatWind(wind: Float) = (wind.toString() + "km/h")
+
+    fun formatFullHour(timestamp: Long): String {
+        val sdf = SimpleDateFormat("HH':00'", Locale.getDefault())
+        return sdf.format(Date(timestamp))
+    }
+
+    fun formatDay(timestamp: Long): String {
+        val format = SimpleDateFormat("EEE", Locale.getDefault())
+        return format.format(Date(timestamp))
     }
 }

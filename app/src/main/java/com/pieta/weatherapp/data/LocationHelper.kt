@@ -6,14 +6,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
 
 object LocationHelper {
     private fun permissionsCheck(context: Context) : Boolean {
-        val hasFineLocationPermission = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val hasCoarseLocationPermission = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasFineLocationPermission =
+                ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
+        val hasCoarseLocationPermission =
+                ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
         return hasCoarseLocationPermission && hasFineLocationPermission
     }
 
@@ -34,7 +43,7 @@ object LocationHelper {
             if (location != null) {
                 f(location.latitude.toFloat(), location.longitude.toFloat())
             } else {
-                f(51.1079f, 17.0385f)
+                f(0f, 0f)
             }
         }
     }

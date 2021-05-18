@@ -30,104 +30,91 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val serializer = Serializer()
-    private lateinit var backgroundImage: ImageView
+    private lateinit var backgroundImageView: ImageView
     private lateinit var viewPager: ViewPager2
     private lateinit var mediaPlayer: MediaPlayer
 
     override fun onStart() {
         isRunning = true
-        if(::mediaPlayer.isInitialized) {
-            mediaPlayer.start()
-        }
+        if(::mediaPlayer.isInitialized) mediaPlayer.start()
         super.onStart()
     }
 
     override fun onStop() {
         isRunning = false
-        if(::mediaPlayer.isInitialized) {
-            mediaPlayer.pause()
-        }
+        if(::mediaPlayer.isInitialized) mediaPlayer.pause()
         super.onStop()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        LocationHelper.requestPermissions(this)
-
-        AlarmCreator.createAlarm(this)
-        NotificationsManager.createNotificationChannel(this)
-
-        viewPager = findViewById(R.id.view_pager)
-        backgroundImage = findViewById(R.id.mainBackgroundImage)
+        initializeUtilities()
+        initializeViews()
         initializeButtons()
         initializeNavMenu()
         initializeAdapter()
     }
 
+    private fun initializeViews() {
+        viewPager = findViewById(R.id.view_pager)
+        backgroundImageView = findViewById(R.id.mainBackgroundImage)
+    }
+
+    private fun initializeUtilities() {
+        LocationHelper.requestPermissions(this)
+        AlarmCreator.createAlarm(this)
+        NotificationsManager.createNotificationChannel(this)
+    }
+
     private fun initializeAdapter() {
         val loaded = serializer.loadWeather(this)
         if (loaded == null || loaded == "") {
-            updateAll()
+            fetchNewData()
         } else {
-            val time = System.currentTimeMillis()
-            val loadedTime = serializer.loadLastFetchDate(this)
-            val hourInMilliseconds = 3600000
-            if(time - loadedTime + loadedTime % hourInMilliseconds > hourInMilliseconds) {
-                updateAll()
-                return
-            }
-            val (d, h) = serializer.deserializeWeather(loaded)
-            val cityName = serializer.loadLastCity(this) ?: "-"
-            val adapter = ViewPagerAdapter(cityName, d, h)
-            viewPager.adapter = adapter
-            val now = h?.get(0)
-            if (now != null) {
-                backgroundImage.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
-                if(::mediaPlayer.isInitialized) {
-                    mediaPlayer.release()
-                }
-                mediaPlayer = MediaPlayer.create(this, ContentManager.getSound(now.weather[0].icon))
-                mediaPlayer.isLooping = true
-                mediaPlayer.start()
-            }
+            if(isDataOutdated()) fetchNewData()
+            else loadSavedData(loaded)
         }
     }
 
-    private fun updateAll() {
-        Toast.makeText(this, "Pobieram dane pogodowe...", Toast.LENGTH_LONG).show()
-        val adapter = ViewPagerAdapter("-", null, null)
+    private fun isDataOutdated(): Boolean {
+        val hourInMilliseconds = 3600000
+        val time = System.currentTimeMillis()
+        val loadedTime = serializer.loadLastFetchDate(this)
+        return time - loadedTime + loadedTime % hourInMilliseconds > hourInMilliseconds
+    }
+
+    private fun loadSavedData(loaded: String) {
+        val (d, h) = serializer.deserializeWeather(loaded)
+        val cityName = serializer.loadLastCity(this) ?: "-"
+        val adapter = ViewPagerAdapter(cityName, d, h)
+        viewPager.adapter = adapter
+        val now = h?.get(0)
+        setSoundAndBackground(now)
+    }
+
+    private fun fetchNewData() {
+        Toast.makeText(this, getString(R.string.toast_fetching_data), Toast.LENGTH_LONG).show()
+        val adapter = ViewPagerAdapter("", null, null)
         viewPager.adapter = adapter
 
         val requestHandler = RequestHandler(this)
         val function = { lat: Float, lon: Float ->
             requestHandler.lon = lon
             requestHandler.lat = lat
-
             requestHandler.run { s: String ->
                 val responseParser = ResponseParser()
                 thread {
                     val city = requestHandler.getCity()
+                    val (d, h) = responseParser.parse(s)
+                    val loadedAdapter = ViewPagerAdapter(city, d, h)
                     serializer.saveLastCityName(city, this)
-                    responseParser.parse(s)
-                    val h = responseParser.hourly
-                    val loadedAdapter = ViewPagerAdapter(city, responseParser.daily, h)
                     runOnUiThread {
                         viewPager.adapter = loadedAdapter
                         val now = h?.get(0)
-                        if (now != null) {
-                            backgroundImage.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
-                            if(::mediaPlayer.isInitialized) {
-                                mediaPlayer.release()
-                            }
-                            mediaPlayer = MediaPlayer.create(this, ContentManager.getSound(now.weather[0].icon))
-                            mediaPlayer.isLooping = true
-                            mediaPlayer.start()
-                        }
+                        setSoundAndBackground(now)
                     }
-                    serializer.saveWeather(serializer.serializeWeather(responseParser.daily, responseParser.hourly), this)
-                    val time = System.currentTimeMillis()
-                    serializer.saveLastFetchDate(time, this)
+                    serializer.updateWeatherDataHelper(d, h, this)
                 }
             }
         }
@@ -135,24 +122,37 @@ class MainActivity : AppCompatActivity() {
         LocationHelper.getLocation(this, function)
     }
 
+    private fun setSoundAndBackground(now: Hourly?) {
+        if (now != null) {
+            backgroundImageView.setImageDrawable(ContentManager.getBackground(this, now.weather[0].icon))
+            if (::mediaPlayer.isInitialized) {
+                mediaPlayer.release()
+            }
+            mediaPlayer = MediaPlayer.create(this, ContentManager.getSound(now.weather[0].icon))
+            mediaPlayer.isLooping = true
+            mediaPlayer.start()
+        }
+    }
+
     private fun initializeButtons() {
         val menuHourlyButton = findViewById<TextView>(R.id.menu_hourly_button)
         val menuDailyButton = findViewById<TextView>(R.id.menu_daily_button)
+        val largeSize = 40f
+        val smallSize = 32f
+        val dragDistance = 750f
 
-        menuHourlyButton.textSize = 40f
-        menuDailyButton.textSize = 32f
+        menuHourlyButton.textSize = largeSize
+        menuDailyButton.textSize = smallSize
 
         menuDailyButton.setOnClickListener {
-
             viewPager.beginFakeDrag()
-            viewPager.fakeDragBy(-750f)
+            viewPager.fakeDragBy(-dragDistance)
             viewPager.endFakeDrag()
         }
 
         menuHourlyButton.setOnClickListener {
-
             viewPager.beginFakeDrag()
-            viewPager.fakeDragBy(750f)
+            viewPager.fakeDragBy(dragDistance)
             viewPager.endFakeDrag()
         }
 
@@ -161,12 +161,12 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
                 when (position) {
                     0 -> {
-                        menuHourlyButton.textSize = 40f
-                        menuDailyButton.textSize = 32f
+                        menuHourlyButton.textSize = largeSize
+                        menuDailyButton.textSize = smallSize
                     }
                     1 -> {
-                        menuHourlyButton.textSize = 32f
-                        menuDailyButton.textSize = 40f
+                        menuHourlyButton.textSize = smallSize
+                        menuDailyButton.textSize = largeSize
                     }
                 }
             }
@@ -176,56 +176,58 @@ class MainActivity : AppCompatActivity() {
     private fun initializeNavMenu() {
         val menuOptionsButton = findViewById<ImageView>(R.id.menu_options_button)
         val navigationDrawer = findViewById<DrawerLayout>(R.id.mainDrawerLayout)
+        val navView = findViewById<NavigationView>(R.id.navView)
+
         menuOptionsButton.setOnClickListener {
-            if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+            if (navigationDrawer.isDrawerOpen(GravityCompat.START))
                 navigationDrawer.closeDrawer(GravityCompat.START)
-            } else {
-                navigationDrawer.openDrawer(GravityCompat.START)
-            }
+            else navigationDrawer.openDrawer(GravityCompat.START)
         }
 
-        val navView = findViewById<NavigationView>(R.id.navView)
         navView.setNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.navMenuNotifications -> {
-                    val intent = Intent(this, NotificationsActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.navMenuCredits -> {
-                    val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                    val popupView: View = inflater.inflate(R.layout.credits_popout, null)
-                    val width = LinearLayout.LayoutParams.WRAP_CONTENT
-                    val height = LinearLayout.LayoutParams.WRAP_CONTENT
-                    val focusable = true
-
-                    val popupWindow = PopupWindow(popupView, width, height, focusable)
-                    popupWindow.showAtLocation(navigationDrawer, Gravity.CENTER, 0, 0)
-                    navigationDrawer.closeDrawer(GravityCompat.START)
-                    popupView.setOnTouchListener { v, event ->
-                        popupWindow.dismiss()
-                        true
-                    }
-                }
-                R.id.navMenuUpdateLocation -> {
-                    updateAll()
-                }
-                R.id.navMenuFeedback -> {
-                    val mailIntent = Intent(Intent.ACTION_SENDTO)
-                    val uriText = "mailto:" + Uri.encode("246685@student.pwr.edu.pl") + "?subject=" + Uri.encode("WeatherApp Feedback")
-                    val uri = Uri.parse(uriText)
-                    mailIntent.data = uri
-                    startActivity(Intent.createChooser(mailIntent, "Wyśli maila..."))
-                }
-                R.id.navMenuRate -> {
-                    try {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-                    } catch (e: ActivityNotFoundException) {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-                    }
-                }
+                R.id.navMenuNotifications -> openNotificationsActivity()
+                R.id.navMenuCredits -> openCreditsPopup(navigationDrawer)
+                R.id.navMenuUpdateLocation -> fetchNewData()
+                R.id.navMenuFeedback -> openFeedbackIntent()
+                R.id.navMenuRate -> openRateIntent()
             }
             true
         }
+    }
 
+    private fun openRateIntent() {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+        } catch (e: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+        }
+    }
+
+    private fun openFeedbackIntent() {
+        val mailIntent = Intent(Intent.ACTION_SENDTO)
+        val uriText = "mailto:" + Uri.encode("246685@student.pwr.edu.pl") + "?subject=" + Uri.encode("WeatherApp Feedback")
+        mailIntent.data = Uri.parse(uriText)
+        startActivity(Intent.createChooser(mailIntent, getString(R.string.send_mail)))
+    }
+
+    private fun openCreditsPopup(navigationDrawer: DrawerLayout) {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView: View = inflater.inflate(R.layout.credits_popout, null)
+        val width = LinearLayout.LayoutParams.WRAP_CONTENT
+        val height = LinearLayout.LayoutParams.WRAP_CONTENT
+        val popupWindow = PopupWindow(popupView, width, height, true)
+
+        popupWindow.showAtLocation(navigationDrawer, Gravity.CENTER, 0, 0)
+        navigationDrawer.closeDrawer(GravityCompat.START)
+        popupView.setOnTouchListener { v, event ->
+            popupWindow.dismiss()
+            true
+        }
+    }
+
+    private fun openNotificationsActivity() {
+        val intent = Intent(this, NotificationsActivity::class.java)
+        startActivity(intent)
     }
 }

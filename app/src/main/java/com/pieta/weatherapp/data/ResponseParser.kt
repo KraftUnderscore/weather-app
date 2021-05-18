@@ -6,25 +6,26 @@ import java.io.StringReader
 import java.lang.IllegalStateException
 
 class ResponseParser {
-    var hourly: List<Hourly>? = null
-    var daily: List<Daily>? = null
-
+    private val maxHours = 24
+    private val maxDays = 7
     private val klaxon = Klaxon()
 
-    fun parse(json: String) {
-        hourly = null
-        daily = null
+    fun parse(json: String): Pair<List<Daily>?, List<Hourly>?> {
+        var hourly: List<Hourly>? = null
+        var daily: List<Daily>? = null
 
         try {
             val parsed = klaxon.parseJsonObject(StringReader(json))
             val hourlyArray = parsed.array<Any>("hourly")
             val dailyArray = parsed.array<Any>("daily")
             hourly = hourlyArray?.let { klaxon.parseFromJsonArray(it) }
-            if(hourly != null) hourly = hourly!!.dropLast(hourly!!.size - 24)
+            if(hourly != null) hourly = hourly.dropLast(hourly.size - maxHours)
             daily = dailyArray?.let { klaxon.parseFromJsonArray(it) }
-            if(daily != null) daily = daily!!.dropLast(daily!!.size - 7)
+            if(daily != null) daily = daily.dropLast(daily.size - maxDays)
         }
         catch (e: KlaxonException) {}
         catch (e: IllegalStateException) {}
+
+        return Pair(daily, hourly)
     }
 }

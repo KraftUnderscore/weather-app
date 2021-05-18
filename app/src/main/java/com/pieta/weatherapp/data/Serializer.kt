@@ -8,6 +8,7 @@ import java.io.StringReader
 import java.lang.IllegalStateException
 
 class Serializer {
+
     private val separator = ";-;"
     private val weatherStoreKey = "weather_data"
     private val cityStoreKey = "city_data"
@@ -15,6 +16,14 @@ class Serializer {
     private val notificationsStoreKey = "notifications_data"
     private val preferencesName = "weatherApp"
     private val klaxon = Klaxon()
+
+    fun updateWeatherDataHelper(d: List<Daily>?, h:List<Hourly>?, context: Context) {
+        val serialized = serializeWeather(d, h)
+        saveWeather(serialized, context)
+        val minuteInMillis = 60000
+        val time = System.currentTimeMillis() + minuteInMillis
+        saveLastFetchDate(time, context)
+    }
 
     fun serializeWeather(d: List<Daily>?, h:List<Hourly>?) : String {
         var output = ""
@@ -75,7 +84,6 @@ class Serializer {
     }
 
     fun saveLastFetchDate(data: Long, context: Context) {
-        Log.i("WeatherApp", "Saving $data")
         save(data.toString(), context, lastFetchStoreKey)
     }
 

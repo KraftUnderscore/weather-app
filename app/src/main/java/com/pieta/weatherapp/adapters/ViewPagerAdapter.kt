@@ -30,49 +30,49 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
 
         fun populateViews(hourly: List<Hourly>?)
         {
-            if(hourly == null || hourly.isEmpty())
-            {
-                hourlyMessageText.text = "-"
-                hourlyCityText.text = city
-                hourlyActualTempText.text = "-"
-                hourlyFeelsLikeText.text = "-"
-                hourlyRainText.text = "-"
-                hourlyHumidityText.text = "-"
-                hourlyWindSpeedText.text = "-"
-                hourlyWindDegreeImage.rotation = 90f
-            }
-            else
-            {
-                val now = hourly[0]
-                hourlyMessageText.text = ContentManager.getHourlyMessage(itemView.context, hourly)
-                hourlyCityText.text = city
-                hourlyActualTempText.text = ("%.0f".format(now.temp - 273.15) + "°")
-                hourlyFeelsLikeText.text = ("%.0f".format(now.feels_like - 273.15)+ "°")
-                hourlyRainText.text = ("%.0f".format(100f * now.pop) + "%")
-                hourlyHumidityText.text = (now.humidity.toString() + "%")
-                hourlyWindSpeedText.text = (now.wind_speed.toString() + "km/h")
-                hourlyWindDegreeImage.rotation = (now.wind_deg - 90).toFloat()
+            if(hourly == null || hourly.isEmpty()) populateEmpty()
+            else populateNotEmpty(hourly)
+        }
 
-                for (hour in hourly)
-                {
-                    val view = LayoutInflater.from(itemView.context).inflate(R.layout.hourly_scroll_item, hourlyWeatherLayout, true)
-                    val hourText =  view.findViewById<TextView>(R.id.hourlyScrollItemHourText)
-                    val tempText = view.findViewById<TextView>(R.id.hourlyScrollItemTempText)
-                    val imageView = view.findViewById<ImageView>(R.id.hourlyScrollItemIcon)
+        private fun populateNotEmpty(hourly: List<Hourly>) {
+            val now = hourly[0]
+            hourlyMessageText.text = ContentManager.getHourlyMessage(itemView.context, hourly)
+            hourlyCityText.text = city
+            hourlyActualTempText.text = ContentManager.formatTemp(now.temp)
+            hourlyFeelsLikeText.text = ContentManager.formatTemp(now.feels_like)
+            hourlyRainText.text = ContentManager.formatPop(now.pop)
+            hourlyHumidityText.text = ContentManager.formatHum(now.humidity)
+            hourlyWindSpeedText.text = ContentManager.formatWind(now.wind_speed)
+            hourlyWindDegreeImage.rotation = (now.wind_deg - 90).toFloat()
 
-                    val format = SimpleDateFormat("HH':00'", Locale.getDefault())
-                    val dateString = format.format(Date(hour.dt.toLong() * 1000))
-                    val formattedTemp = ("%.0f".format(hour.temp - 273.15) + "°")
+            for (hour in hourly) populateHourItem(hour)
+        }
 
-                    hourText.text = dateString
-                    tempText.text = formattedTemp
-                    imageView.setImageDrawable(ContentManager.getIcon(itemView.context, hour.weather[0].icon))
+        private fun populateHourItem(hour: Hourly) {
+            val view = LayoutInflater.from(itemView.context).inflate(R.layout.hourly_scroll_item, hourlyWeatherLayout, true)
+            val hourText = view.findViewById<TextView>(R.id.hourlyScrollItemHourText)
+            val tempText = view.findViewById<TextView>(R.id.hourlyScrollItemTempText)
+            val imageView = view.findViewById<ImageView>(R.id.hourlyScrollItemIcon)
 
-                    hourText.id = View.generateViewId()
-                    tempText.id = View.generateViewId()
-                    imageView.id = View.generateViewId()
-                }
-            }
+            hourText.text = ContentManager.formatFullHour(hour.dt * 1000L)
+            tempText.text = ContentManager.formatTemp(hour.temp)
+            imageView.setImageDrawable(ContentManager.getIcon(itemView.context, hour.weather[0].icon))
+
+            hourText.id = View.generateViewId()
+            tempText.id = View.generateViewId()
+            imageView.id = View.generateViewId()
+        }
+
+        private fun populateEmpty() {
+            val emptyValue = itemView.context.getString(R.string.default_empty_value)
+            hourlyMessageText.text = emptyValue
+            hourlyCityText.text = emptyValue
+            hourlyActualTempText.text = emptyValue
+            hourlyFeelsLikeText.text = emptyValue
+            hourlyRainText.text = emptyValue
+            hourlyHumidityText.text = emptyValue
+            hourlyWindSpeedText.text = emptyValue
+            hourlyWindDegreeImage.rotation = 90f
         }
     }
 
@@ -84,40 +84,49 @@ class ViewPagerAdapter(private val city: String, private val daily: List<Daily>?
 
         fun populateViews(daily: List<Daily>?)
         {
-            if(daily == null) {
-                dailyMessageText.text = "-"
-                dailyCityText.text = city
-            } else {
-                dailyMessageText.text = ContentManager.getDailyMessage(itemView.context, daily)
-                dailyCityText.text = city
-                for (day in daily) {
-                    val view = LayoutInflater.from(itemView.context).inflate(R.layout.daily_scroll_item, dailyScrollLayout, true)
-                    val dayText = view.findViewById<TextView>(R.id.dailyScrollDayText)
-                    val tempText = view.findViewById<TextView>(R.id.dailyScrollTempText)
-                    val popText = view.findViewById<TextView>(R.id.dailyScrollRainText)
-                    val imageView = view.findViewById<ImageView>(R.id.dailyScrollItemIcon)
+            if(daily == null) populateEmpty()
+            else populateNotEmpty(daily)
+        }
 
-                    val format = SimpleDateFormat("EEE", Locale.getDefault())
-                    val dateString = format.format(Date(day.dt.toLong() * 1000))
-                    val formattedTemp = ("%.0f".format(day.temp.day - 273.15) + "°")
-                    val formattedPop = ("%.0f".format(100f * day.pop) + "%")
+        private fun populateEmpty() {
+            val emptyValue = itemView.context.getString(R.string.default_empty_value)
+            dailyMessageText.text = emptyValue
+            dailyCityText.text = emptyValue
+        }
 
-                    dayText.text = dateString
-                    tempText.text = formattedTemp
-                    popText.text = formattedPop
-                    imageView.setImageDrawable(ContentManager.getIcon(itemView.context, day.weather[0].icon))
-
-                    dayText.id = View.generateViewId()
-                    tempText.id = View.generateViewId()
-                    popText.id = View.generateViewId()
-                    imageView.id = View.generateViewId()
-                    if(day == daily.last()) continue
-                    val horizontalLine = View(itemView.context)
-                    horizontalLine.setBackgroundColor(itemView.context.resources.getColor(R.color.white))
-                    horizontalLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2)
-                    dailyScrollLayout.addView(horizontalLine)
-                }
+        private fun populateNotEmpty(daily: List<Daily>) {
+            dailyMessageText.text = ContentManager.getDailyMessage(itemView.context, daily)
+            dailyCityText.text = city
+            for (day in daily) {
+                populateDayItem(day)
+                if(day == daily.last()) continue
+                addSeparator()
             }
+        }
+
+        private fun addSeparator() {
+            val horizontalLine = View(itemView.context)
+            horizontalLine.setBackgroundColor(itemView.context.resources.getColor(R.color.white))
+            horizontalLine.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2)
+            dailyScrollLayout.addView(horizontalLine)
+        }
+
+        private fun populateDayItem(day: Daily) {
+            val view = LayoutInflater.from(itemView.context).inflate(R.layout.daily_scroll_item, dailyScrollLayout, true)
+            val dayText = view.findViewById<TextView>(R.id.dailyScrollDayText)
+            val tempText = view.findViewById<TextView>(R.id.dailyScrollTempText)
+            val popText = view.findViewById<TextView>(R.id.dailyScrollRainText)
+            val imageView = view.findViewById<ImageView>(R.id.dailyScrollItemIcon)
+
+            dayText.text = ContentManager.formatDay(day.dt * 1000L)
+            tempText.text = ContentManager.formatTemp(day.temp.day)
+            popText.text = ContentManager.formatPop(day.pop)
+            imageView.setImageDrawable(ContentManager.getIcon(itemView.context, day.weather[0].icon))
+
+            dayText.id = View.generateViewId()
+            tempText.id = View.generateViewId()
+            popText.id = View.generateViewId()
+            imageView.id = View.generateViewId()
         }
     }
 
