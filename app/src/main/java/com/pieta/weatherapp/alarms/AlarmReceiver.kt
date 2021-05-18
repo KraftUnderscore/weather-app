@@ -28,7 +28,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 val city = requestHandler.getCity()
                 serializer.saveLastCityName(city, context)
             }
-            requestHandler.run(handler)
+            requestHandler.fetch(handler)
         }
 
         LocationHelper.getLocation(context, passLocation)

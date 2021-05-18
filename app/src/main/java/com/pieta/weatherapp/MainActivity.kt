@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         val function = { lat: Float, lon: Float ->
             requestHandler.lon = lon
             requestHandler.lat = lat
-            requestHandler.run { s: String ->
+            requestHandler.fetch { s: String ->
                 val responseParser = ResponseParser()
                 thread {
                     val city = requestHandler.getCity()

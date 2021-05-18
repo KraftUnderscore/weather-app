@@ -18,7 +18,7 @@ class RequestHandler constructor(val context: Context)
     var lat:Float = 0.0f
     var lon:Float = 0.0f
 
-    fun run(f: (String) -> Unit) {
+    fun fetch(f: (String) -> Unit) {
         val url = context.getString(R.string.api_url, lat, lon, appId)
         val request = StringRequest(
             Request.Method.GET, url,
