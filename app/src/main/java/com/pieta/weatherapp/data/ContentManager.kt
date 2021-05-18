@@ -12,15 +12,15 @@ object ContentManager {
     private const val maxDailyMessages = 1
 
     private val weatherConditions : HashMap<String, WeatherCondition> = hashMapOf(
-        "01" to WeatherCondition(R.drawable.ic_01, R.drawable.bg_01, R.array.con_01, R.raw.light_rain), // clear sky
-        "02" to WeatherCondition(R.drawable.ic_02, R.drawable.bg_02, R.array.con_02, R.raw.light_rain), // few clouds
-        "03" to WeatherCondition(R.drawable.ic_03, R.drawable.bg_03, R.array.con_03, R.raw.light_rain), // scattered clouds
-        "04" to WeatherCondition(R.drawable.ic_04, R.drawable.bg_04, R.array.con_04, R.raw.light_rain), // broken clouds
-        "09" to WeatherCondition(R.drawable.ic_09, R.drawable.bg_09, R.array.con_09, R.raw.light_rain), // shower rain
-        "10" to WeatherCondition(R.drawable.ic_10, R.drawable.bg_10, R.array.con_10, R.raw.light_rain), // rain
-        "11" to WeatherCondition(R.drawable.ic_11, R.drawable.bg_11, R.array.con_11, R.raw.light_rain), // thunderstorm
-        "13" to WeatherCondition(R.drawable.ic_13, R.drawable.bg_13, R.array.con_13, R.raw.light_rain), // snow
-        "50" to WeatherCondition(R.drawable.ic_50, R.drawable.bg_50, R.array.con_50, R.raw.light_rain)  // mist
+        "01" to WeatherCondition(R.drawable.ic_01, R.drawable.bg_01, R.array.con_01, R.raw.raw_01), // clear sky
+        "02" to WeatherCondition(R.drawable.ic_02, R.drawable.bg_02, R.array.con_02, R.raw.raw_02), // few clouds
+        "03" to WeatherCondition(R.drawable.ic_03, R.drawable.bg_03, R.array.con_03, R.raw.raw_03), // scattered clouds
+        "04" to WeatherCondition(R.drawable.ic_04, R.drawable.bg_04, R.array.con_04, R.raw.raw_04), // broken clouds
+        "09" to WeatherCondition(R.drawable.ic_09, R.drawable.bg_09, R.array.con_09, R.raw.raw_09), // shower rain
+        "10" to WeatherCondition(R.drawable.ic_10, R.drawable.bg_10, R.array.con_10, R.raw.raw_10), // rain
+        "11" to WeatherCondition(R.drawable.ic_11, R.drawable.bg_11, R.array.con_11, R.raw.raw_11), // thunderstorm
+        "13" to WeatherCondition(R.drawable.ic_13, R.drawable.bg_13, R.array.con_13, R.raw.raw_13), // snow
+        "50" to WeatherCondition(R.drawable.ic_50, R.drawable.bg_50, R.array.con_50, R.raw.raw_50)  // mist
     )
 
     class WeatherCondition(private val iconId: Int, private val backgroundId: Int, private val stringArrayId: Int, private val soundId: Int) {
@@ -43,7 +43,7 @@ object ContentManager {
     }
 
     fun getSound(imgId: String) : Int {
-        return weatherConditions[imgId.substring(0, 2)]?.getSound() ?: R.raw.light_rain
+        return weatherConditions[imgId.substring(0, 2)]?.getSound() ?: R.raw.raw_10
     }
 
     fun getIcon(context: Context, imgId: String) : Drawable? {
